@@ -1,4 +1,7 @@
 ---
+// ASTRO FRONTMATTER (Renderizado en Servidor):
+// Este bloque --- se ejecuta estrictamente en el servidor en cada render. 
+// Aquí definimos HTML estático y enviamos variables iniciales.
 import "../styles/global.css";
 
 const apiUrl = "http://localhost:5083";
@@ -45,6 +48,11 @@ const apiUrl = "http://localhost:5083";
                 </div>
             </header>
 
+            {/* 
+              HTML ESTÁTICO (Estructura Base):
+              Estas secciones y botones existen por defecto en el DOM al cargar la página.
+              Los botones tienen IDs específicos para que los scripts clientes los controlen.
+            */}
             <section class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                 <article
                     class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
@@ -114,6 +122,71 @@ const apiUrl = "http://localhost:5083";
                   </div>
                 </article>
 
+                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
+                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Negocios</p>
+
+                  <h2 class="mt-2 text-xl font-bold">Crear negocio</h2>
+
+                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+                    Crea un negocio activo en MariaDB usando el endpoint POST /api/businesses.
+                  </p>
+
+                  <!--
+                    Este formulario es temporal para desarrollo.
+                    Más adelante esta acción vivirá en /admin o en un panel protegido con login.
+                  -->
+                  <form id="createBusinessForm" class="mt-5 flex flex-col gap-3">
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Nombre del negocio
+                      <input
+                        id="businessNameInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        type="text"
+                        placeholder="Barbería Nova"
+                        required
+                      />
+                    </label>
+
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Slug
+                      <input
+                        id="businessSlugInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        type="text"
+                        placeholder="barberia-nova"
+                        required
+                      />
+                    </label>
+
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Teléfono
+                      <input
+                        id="businessPhoneInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        type="text"
+                        placeholder="4629876543"
+                      />
+                    </label>
+
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Email
+                      <input
+                        id="businessEmailInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        type="email"
+                        placeholder="contacto@barberianova.com"
+                      />
+                    </label>
+
+                    <button
+                      class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+                      type="submit"
+                    >
+                      Crear negocio
+                    </button>
+                  </form>
+                </article>
+
                 <article
                     class="rounded-[1.5rem] border border-dashed border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-5"
                 >
@@ -131,6 +204,38 @@ const apiUrl = "http://localhost:5083";
                         Aquí probaremos reservar, confirmar y cancelar citas.
                     </p>
                 </article>
+            </section>
+
+            <section class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
+              <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 class="text-xl font-bold">Negocios activos</h2>
+                  <p class="text-sm text-[var(--ks-text-muted)]">
+                    Lista visual de negocios obtenidos desde MariaDB.
+                  </p>
+                </div>
+
+                <button
+                  id="refreshBusinessesButton"
+                  class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+                >
+                  Actualizar lista
+                </button>
+              </div>
+
+              {/* 
+                HTML DINÁMICO (Contenedor):
+                Este elemento contenedor inicia vacío o con un placeholder de carga.
+                A través del script cliente, inyectaremos código HTML mapeado dinámicamente.
+              */}
+              <div
+                id="businessesList"
+                class="mt-5 grid gap-4 md:grid-cols-2"
+              >
+                <p class="text-sm text-[var(--ks-text-muted)]">
+                  Presiona “Actualizar lista” para cargar negocios.
+                </p>
+              </div>
             </section>
 
             <section
@@ -161,8 +266,14 @@ const apiUrl = "http://localhost:5083";
         </main>
 
         <script>
+            // CLIENT-SIDE SCRIPT: Este código se descarga y ejecuta enteramente en el navegador del cliente.
             const apiUrl = "http://localhost:5083";
 
+            // querySelector con Genéricos de TypeScript (<HTMLButtonElement> / <HTMLDivElement>):
+            // Por defecto, querySelector retorna un tipo genérico 'Element' que carece de métodos específicos.
+            // Al castearlo explícitamente, le enseñamos a TypeScript qué clase de objeto DOM es. Esto habilita:
+            // 1. Validaciones del compilador (ej. TypeScript sabe que un HTMLButtonElement tiene una propiedad 'disabled').
+            // 2. Autocompletado inteligente en el editor de código.
             const resultBox =
                 document.querySelector<HTMLPreElement>("#resultBox");
             const checkDatabaseButton =
@@ -184,10 +295,51 @@ const apiUrl = "http://localhost:5083";
                 "#deactivateStringBusinessButton"
             );
 
+            const refreshBusinessesButton = document.querySelector<HTMLButtonElement>(
+                "#refreshBusinessesButton"
+            );
+
+            const businessesList = document.querySelector<HTMLDivElement>("#businessesList");
+
+            // Referencias al formulario y sus campos.
+            // Usamos tipos específicos para que TypeScript sepa qué propiedades existen,
+            // por ejemplo .value en inputs y .reset() en formularios.
+            const createBusinessForm = document.querySelector<HTMLFormElement>(
+                "#createBusinessForm"
+            );
+
+            const businessNameInput = document.querySelector<HTMLInputElement>(
+                "#businessNameInput"
+            );
+
+            const businessSlugInput = document.querySelector<HTMLInputElement>(
+                "#businessSlugInput"
+            );
+
+            const businessPhoneInput = document.querySelector<HTMLInputElement>(
+                "#businessPhoneInput"
+            );
+
+            const businessEmailInput = document.querySelector<HTMLInputElement>(
+                "#businessEmailInput"
+            );
+
             type ApiResult = {
                 statusCode: number;
                 ok: boolean;
-                data: unknown;
+                data: unknown; // unknown vs any: 'unknown' es la alternativa segura a 'any' en TypeScript.
+                               // Obliga al desarrollador a comprobar el tipo de dato (por ej. con Array.isArray)
+                               // antes de acceder a sus propiedades, previniendo excepciones en tiempo de ejecución.
+            };
+
+            type Business = {
+                id: string;
+                name: string;
+                slug: string;
+                phone: string | null;
+                email: string | null;
+                isActive: boolean;
+                createdAtUtc: string;
             };
 
             function showResult(data: unknown): void {
@@ -196,6 +348,119 @@ const apiUrl = "http://localhost:5083";
                 resultBox.textContent = JSON.stringify(data, null, 2);
             }
 
+            // HTML DINÁMICO (renderBusinesses):
+            // Esta función borra el contenido del contenedor del DOM y construye dinámicamente tarjetas HTML
+            // para cada negocio de la base de datos mapeando los objetos JS a strings utilizando Template Literals.
+            function renderBusinesses(businesses: Business[]): void {
+                if (!businessesList) return;
+
+                if (businesses.length === 0) {
+                    businessesList.innerHTML = `
+                        <p class="text-sm text-[var(--ks-text-muted)]">
+                            No hay negocios activos todavía.
+                        </p>
+                    `;
+                    return;
+                }
+
+                // data-business-id (Atributo de Datos Personalizado):
+                // Permite guardar metadatos (como el UUID/ID de la base de datos de cada negocio)
+                // directamente incrustados en la etiqueta HTML del botón.
+                // Luego podemos recuperarlo en JS con 'element.dataset.businessId'.
+                businessesList.innerHTML = businesses
+                    .map(
+                        (business) => `
+                            <article class="rounded-2xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-4">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div>
+                                        <h3 class="font-bold text-[var(--ks-text)]">
+                                            ${business.name}
+                                        </h3>
+                                        <p class="mt-1 text-sm text-[var(--ks-text-muted)]">
+                                            /${business.slug}
+                                        </p>
+                                    </div>
+
+                                    <span class="rounded-full bg-[var(--ks-primary-soft)] px-3 py-1 text-xs font-bold text-[var(--ks-primary)]">
+                                        Activo
+                                    </span>
+                                </div>
+
+                                <div class="mt-4 space-y-1 text-sm text-[var(--ks-text-muted)]">
+                                    <p>Tel: ${business.phone ?? "Sin teléfono"}</p>
+                                    <p>Email: ${business.email ?? "Sin email"}</p>
+                                </div>
+
+                                <button
+                                    class="deactivate-business-button mt-4 w-full rounded-full bg-[var(--ks-accent-soft)] px-4 py-2 text-sm font-bold text-[var(--ks-accent)] hover:bg-[var(--ks-surface)]"
+                                    data-business-id="${business.id}"
+                                >
+                                    Desactivar negocio
+                                </button>
+                            </article>
+                        `
+                    )
+                    .join("");
+            }
+
+            // ENLAZADO DINÁMICO DE EVENTOS (bindDeactivateBusinessButtons):
+            // ¿Por qué llamarlo después de renderBusinesses?
+            // Al inyectar código dinámicamente con innerHTML, los botones ".deactivate-business-button"
+            // NO existen en el DOM al cargar la página. Si intentáramos enlazarlos al inicio, querySelectorAll
+            // devolvería una lista vacía. Debemos llamar a bindDeactivateBusinessButtons justo después de 
+            // pintar las tarjetas para encontrar estos botones recién añadidos al DOM y enlazarles el evento click.
+            function bindDeactivateBusinessButtons(): void {
+                const deactivateButtons = document.querySelectorAll<HTMLButtonElement>(
+                    ".deactivate-business-button"
+                );
+
+                deactivateButtons.forEach((button) => {
+                    button.addEventListener("click", async () => {
+                        // Obtenemos el ID almacenado en la propiedad dataset (data-business-id) del HTML.
+                        const businessId = button.dataset.businessId;
+
+                        if (!businessId) {
+                            showResult({
+                                ok: false,
+                                message: "No se encontró el ID del negocio.",
+                            });
+                            return;
+                        }
+
+                        try {
+                            // LLAMADA HTTP PATCH (Soft Delete):
+                            // Se ejecuta asíncronamente conectándose al endpoint del backend para inactivar el negocio.
+                            const result = await requestJson(
+                                `${apiUrl}/api/businesses/${businessId}/deactivate`,
+                                {
+                                    method: "PATCH",
+                                }
+                            );
+
+                            showResult(result);
+
+                            // Refresco de Datos Reactivo: Tras desactivar un comercio, llamamos de nuevo al backend
+                            // para actualizar el listado visual sin recargar la página web.
+                            const businessesResult = await requestJson(`${apiUrl}/api/businesses`);
+
+                            if (Array.isArray(businessesResult.data)) {
+                                renderBusinesses(businessesResult.data as Business[]);
+                                bindDeactivateBusinessButtons(); // Re-enlazamos los clics a las tarjetas recién pintadas.
+                            }
+                        } catch {
+                            showResult({
+                                ok: false,
+                                message: "No se pudo desactivar el negocio.",
+                            });
+                        }
+                    });
+                });
+            }
+
+            // API FETCH WRAPPER (requestJson):
+            // Abstracción reutilizable del fetch nativo.
+            // Simplifica las llamadas asíncronas encapsulando la extracción del body asíncrono y mapeando
+            // cabeceras y métodos dinámicos (GET, POST, PATCH), centralizando la obtención del código de estado HTTP.
             async function requestJson(
                 url: string,
                 options?: RequestInit
@@ -210,6 +475,9 @@ const apiUrl = "http://localhost:5083";
                 };
             }
 
+            // LISTENERS DE INTERACCIÓN CLIENTE:
+            
+            // 1. Health check de base de datos (petición GET de diagnóstico)
             checkDatabaseButton?.addEventListener("click", async () => {
                 try {
                     const result = await requestJson(
@@ -225,6 +493,7 @@ const apiUrl = "http://localhost:5083";
                 }
             });
 
+            // 2. Consulta cruda de Negocios (GET /api/businesses)
             getBusinessesButton?.addEventListener("click", async () => {
                 try {
                     const result = await requestJson(
@@ -239,6 +508,82 @@ const apiUrl = "http://localhost:5083";
                 }
             });
 
+            // 3. Consulta de Negocios y Renderizado Visual Dinámico en la interfaz
+            refreshBusinessesButton?.addEventListener("click", async () => {
+                try {
+                    const result = await requestJson(`${apiUrl}/api/businesses`);
+
+                    showResult(result);
+
+                    if (Array.isArray(result.data)) {
+                        renderBusinesses(result.data as Business[]);
+                        bindDeactivateBusinessButtons(); // Indispensable llamar aquí para registrar clics en los nuevos botones dinámicos.
+                    }
+                } catch {
+                    showResult({
+                        ok: false,
+                        message: "No se pudo actualizar la lista de negocios.",
+                    });
+                }
+            });
+
+            // 4. Envío del Formulario para Crear Negocio (POST /api/businesses)
+            createBusinessForm?.addEventListener("submit", async (event) => {
+                // Evita que el navegador recargue la página al enviar el formulario.
+                event.preventDefault();
+
+                // Validamos que existan los inputs antes de leer sus valores.
+                // Esto evita errores si algún ID está mal escrito en el HTML.
+                if (!businessNameInput || !businessSlugInput) {
+                    showResult({
+                        ok: false,
+                        message: "No se encontraron los campos obligatorios del formulario.",
+                    });
+                    return;
+                }
+
+                // Creamos el objeto que espera el backend en CreateBusinessRequest.
+                const payload = {
+                    name: businessNameInput.value.trim(),
+                    slug: businessSlugInput.value.trim().toLowerCase(),
+                    phone: businessPhoneInput?.value.trim() || null,
+                    email: businessEmailInput?.value.trim() || null,
+                };
+
+                try {
+                    // Enviamos el negocio al backend usando POST.
+                    const result = await requestJson(`${apiUrl}/api/businesses`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    showResult(result);
+
+                    // Si el backend respondió bien (ok = true), limpiamos los campos del formulario.
+                    if (result.ok) {
+                        createBusinessForm.reset();
+                    }
+
+                    // Después de crear, volvemos a pedir la lista actualizada del backend para refrescar las tarjetas.
+                    const businessesResult = await requestJson(`${apiUrl}/api/businesses`);
+
+                    if (Array.isArray(businessesResult.data)) {
+                        renderBusinesses(businessesResult.data as Business[]);
+                        bindDeactivateBusinessButtons(); // Reconectamos los botones de las nuevas tarjetas inyectadas dinámicamente.
+                    }
+                } catch {
+                    showResult({
+                        ok: false,
+                        message: "No se pudo crear el negocio. Revisa que el backend esté corriendo.",
+                    });
+                }
+            });
+
+            // TODO: Estos dos manejadores usan IDs fijos con fines estrictos de testeo y pruebas manuales del backend.
+            // Se dinamizarán o removerán en fases posteriores de desarrollo.
             deactivateBadBusinessButton?.addEventListener("click", async () => {
                 try {
                     const result = await requestJson(

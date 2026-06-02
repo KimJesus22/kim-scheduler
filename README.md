@@ -77,8 +77,9 @@ La API cuenta con endpoints de salud de infraestructura, el módulo de negocios 
 | Método | Endpoint | Descripción | Estado |
 | :--- | :--- | :--- | :--- |
 | **POST** | `/api/businesses` | Registra un nuevo negocio local (Nombre, Slug, etc.) |  Activo |
-| **GET** | `/api/businesses` | Lista todos los negocios registrados |  Activo |
+| **GET** | `/api/businesses` | Lista todos los negocios registrados activos |  Activo |
 | **GET** | `/api/businesses/{id}` | Obtiene los detalles de un negocio por su ID |  Activo |
+| **PATCH** | `/api/businesses/{id}/deactivate` | Desactiva lógicamente un negocio (Soft Delete) |  Activo |
 
 ### Módulo de Servicios (Services)
 | Método | Endpoint | Descripción | Estado |

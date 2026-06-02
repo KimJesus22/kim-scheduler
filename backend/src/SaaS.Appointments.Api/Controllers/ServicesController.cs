@@ -17,9 +17,12 @@ public class ServicesController : ControllerBase
         _dbContext = dbContext;
     }
 
+    // POST /api/services: Crea un nuevo servicio (ej. "Corte", "Coloración") asociado a un negocio.
     [HttpPost]
     public async Task<IActionResult> CreateService(CreateServiceRequest request)
     {
+        // Integridad Referencial: Validamos que exista el negocio padre en la DB
+        // antes de intentar insertar el registro del servicio secundario (FK constraint).
         var businessExists = await _dbContext.Businesses
             .AnyAsync(x => x.Id == request.BusinessId);
 
@@ -31,6 +34,7 @@ public class ServicesController : ControllerBase
             });
         }
 
+        // Reglas de negocio cuantitativas: Evitamos inconsistencias en variables numéricas.
         if (request.DurationMinutes <= 0)
         {
             return BadRequest(new
@@ -80,10 +84,13 @@ public class ServicesController : ControllerBase
         );
     }
 
+    // GET /api/services/business/{businessId:guid}: Obtiene el catálogo de servicios de un negocio específico.
+    // El prefijo :guid asegura que la petición falle inmediatamente en el enrutador si el ID es un string inválido.
     [HttpGet("business/{businessId:guid}")]
     public async Task<IActionResult> GetServicesByBusiness(Guid businessId)
     {
         var services = await _dbContext.Services
+            // Mapeo relacional: Filtramos por el FK del negocio e ignoramos servicios que hayan sido inactivados.
             .Where(x => x.BusinessId == businessId && x.IsActive)
             .OrderBy(x => x.Name)
             .Select(x => new ServiceResponse
@@ -101,6 +108,7 @@ public class ServicesController : ControllerBase
         return Ok(services);
     }
 
+    // GET /api/services/{id:guid}: Obtiene un servicio individual por su ID primario.
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetServiceById(Guid id)
     {
