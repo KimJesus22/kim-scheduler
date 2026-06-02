@@ -1,0 +1,26 @@
+# .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# Node / Frontend
+node_modules/
+dist/
+.astro/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
