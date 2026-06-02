@@ -51,7 +51,7 @@ El proyecto implementa una **Arquitectura Limpia Simplificada por Capas**, asegu
                            │
                            ▼
     ┌──────────────────────────────────────────────┐
-    │      SaaS.Appointments.Application           │  ◄── Casos de Uso, Servicios y DTOs (Próximamente)
+    │      SaaS.Appointments.Application           │  ◄── Capa de Casos de Uso, Servicios y DTOs
     └──────────────────────┬───────────────────────┘
                            │
                            ▼
@@ -71,14 +71,26 @@ El proyecto implementa una **Arquitectura Limpia Simplificada por Capas**, asegu
 
 ## 🔗 Endpoints de la API
 
-La API cuenta con endpoints de salud de infraestructura y la base del módulo de negocios:
+La API cuenta con endpoints de salud de infraestructura, el módulo de negocios y el módulo de servicios:
 
+### Módulo de Negocios (Businesses)
 | Método | Endpoint | Descripción | Estado |
 | :--- | :--- | :--- | :--- |
-| **GET** | `/api/health/database` | Comprueba el estado de la conexión a MariaDB |  Activo |
 | **POST** | `/api/businesses` | Registra un nuevo negocio local (Nombre, Slug, etc.) |  Activo |
 | **GET** | `/api/businesses` | Lista todos los negocios registrados |  Activo |
 | **GET** | `/api/businesses/{id}` | Obtiene los detalles de un negocio por su ID |  Activo |
+
+### Módulo de Servicios (Services)
+| Método | Endpoint | Descripción | Estado |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/services` | Registra un nuevo servicio asociado a un negocio |  Activo |
+| **GET** | `/api/services/business/{businessId}` | Obtiene los servicios activos de un negocio |  Activo |
+| **GET** | `/api/services/{id}` | Obtiene los detalles de un servicio por su ID |  Activo |
+
+### Utilidades & Diagnóstico (Utilities)
+| Método | Endpoint | Descripción | Estado |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/api/health/database` | Comprueba el estado de la conexión a MariaDB |  Activo |
 
 ---
 
@@ -89,6 +101,7 @@ Sigue estos sencillos pasos para levantar el entorno de desarrollo local en minu
 ### 1. Requisitos Previos
 *   [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 *   [Docker Desktop](https://www.docker.com/products/docker-desktop/) (debe estar corriendo)
+*   [Node.js](https://nodejs.org/) & [pnpm](https://pnpm.io/)
 *   [Git](https://git-scm.com/)
 
 ### 2. Clonar y Configurar Infraestructura
@@ -110,7 +123,7 @@ cd backend
 dotnet ef database update --project src/SaaS.Appointments.Infrastructure --startup-project src/SaaS.Appointments.Api
 ```
 
-### 4. Ejecutar la API
+### 4. Ejecutar la API (Backend)
 Inicia el servidor de desarrollo del backend:
 
 ```powershell
@@ -120,12 +133,33 @@ dotnet run --project src/SaaS.Appointments.Api
 
 *   **Swagger UI:** Una vez iniciado el servidor, accede a la documentación interactiva en: `http://localhost:5083/swagger` (o el puerto asignado en la consola).
 
+### 5. Ejecutar el Frontend (Astro)
+Inicia el servidor de desarrollo del frontend:
+
+```powershell
+# Moverse al directorio del frontend
+cd frontend
+
+# Autorizar scripts de compilación locales si pnpm lo solicita
+pnpm approve-builds
+
+# Instalar dependencias
+pnpm install
+
+# Levantar servidor de desarrollo
+pnpm dev
+```
+
+*   **Portal de Usuario (Landing Page):** `http://localhost:4321/` (Portal web premium responsivo y dinámico).
+*   **Consola de Pruebas (Playground):** `http://localhost:4321/playground` (Herramienta interactiva para simular peticiones reales a la base de datos y al backend desde la interfaz).
+
 ---
 
 ## 📅 Próximos Pasos (Roadmap)
 
 - [ ]  Implementación de Autenticación mediante **JWT (JSON Web Tokens)**.
 - [ ]  Creación de Servicios de Aplicación y Casos de Uso del Backend.
-- [ ]  Módulos CRUD para `Service`, `BusinessHour` y `Appointment`.
+- [/]  Módulos CRUD para `Service` (¡Endpoints de API listos!).
+- [ ]  Módulos CRUD para `BusinessHour` y `Appointment`.
 - [ ]  Validaciones avanzadas de negocio utilizando **FluentValidation**.
-- [ ]  Desarrollo del Frontend interactivo en **Astro + Tailwind CSS**.
+- [x]  Desarrollo del Frontend interactivo inicial (Landing Page + Playground) en **Astro + Tailwind CSS v4**.

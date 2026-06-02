@@ -95,6 +95,7 @@ public class BusinessesController : ControllerBase
     public async Task<IActionResult> GetBusinesses()
     {
         var businesses = await _dbContext.Businesses
+            .Where(x => x.IsActive)
             .OrderByDescending(x => x.CreatedAtUtc)
             .Select(x => new BusinessResponse
             {
@@ -137,5 +138,41 @@ public class BusinessesController : ControllerBase
         }
 
         return Ok(business);
+    }
+
+    [HttpPatch("{id:guid}/deactivate")]
+    public async Task<IActionResult> DeactivateBusiness(Guid id)
+    {
+        var business = await _dbContext.Businesses
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (business is null)
+        {
+            return NotFound(new
+            {
+                message = "Negocio no encontrado."
+            });
+        }
+
+        if (!business.IsActive)
+        {
+            return BadRequest(new
+            {
+                message = "El negocio ya está desactivado."
+            });
+        }
+
+        business.IsActive = false;
+
+        await _dbContext.SaveChangesAsync();
+
+        return Ok(new
+        {
+            message = "Negocio desactivado correctamente.",
+            business.Id,
+            business.Name,
+            business.Slug,
+            business.IsActive
+        });
     }
 }
