@@ -20,8 +20,35 @@ public class BusinessesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateBusiness(CreateBusinessRequest request)
     {
+        var name = request.Name.Trim();
+        var slug = request.Slug.Trim().ToLower();
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return BadRequest(new
+            {
+                message = "El nombre del negocio es obligatorio."
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(slug))
+        {
+            return BadRequest(new
+            {
+                message = "El slug del negocio es obligatorio."
+            });
+        }
+
+        if (slug.Contains(' '))
+        {
+            return BadRequest(new
+            {
+                message = "El slug no debe contener espacios. Usa guiones, por ejemplo: barberia-nova."
+            });
+        }
+
         var slugAlreadyExists = await _dbContext.Businesses
-            .AnyAsync(x => x.Slug == request.Slug);
+            .AnyAsync(x => x.Slug == slug);
 
         if (slugAlreadyExists)
         {
@@ -34,8 +61,8 @@ public class BusinessesController : ControllerBase
         var business = new Business
         {
             Id = Guid.NewGuid(),
-            Name = request.Name.Trim(),
-            Slug = request.Slug.Trim().ToLower(),
+            Name = name,
+            Slug = slug,
             Phone = request.Phone?.Trim(),
             Email = request.Email?.Trim(),
             IsActive = true,

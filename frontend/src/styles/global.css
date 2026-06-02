@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+    --ks-background: #fbf9f6;
+    --ks-surface: #ffffff;
+    --ks-surface-soft: #f5f3f0;
+    --ks-surface-muted: #efeeeb;
+
+    --ks-text: #1b1c1a;
+    --ks-text-muted: #424845;
+
+    --ks-primary: #4e635a;
+    --ks-primary-soft: #d1e8dd;
+    --ks-primary-muted: #8da399;
+
+    --ks-secondary: #45636b;
+    --ks-secondary-soft: #c8e8f2;
+
+    --ks-accent: #885213;
+    --ks-accent-soft: #ffdcbf;
+
+    --ks-border: #e4e2df;
+}
+
+html {
+    font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    background: var(--ks-background);
+    color: var(--ks-text);
+}
+
+body {
+    min-height: 100vh;
+    background: var(--ks-background);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.ks-card-shadow {
+    box-shadow: 0 10px 30px rgba(44, 74, 82, 0.06);
+}

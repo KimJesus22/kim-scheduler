@@ -1,0 +1,244 @@
+---
+import "../styles/global.css";
+
+const benefits = [
+	{
+		title: "Fácil de usar",
+		description:
+			"Una interfaz clara para que cualquier negocio pueda gestionar citas sin curva de aprendizaje complicada.",
+	},
+	{
+		title: "Pensado para negocios locales",
+		description:
+			"Ideal para barberías, estéticas, consultorios, spas y servicios que trabajan con horarios.",
+	},
+	{
+		title: "Preparado para crecer",
+		description:
+			"Base lista para futuras integraciones con Telegram, IA, recordatorios y panel administrativo.",
+	},
+];
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Kim Scheduler</title>
+		<meta
+			name="description"
+			content="SaaS de gestión de citas para pequeños negocios locales."
+		/>
+	</head>
+
+	<body>
+		<header
+			class="sticky top-0 z-50 border-b border-[var(--ks-border)] bg-[var(--ks-background)]/90 backdrop-blur"
+		>
+			<nav
+				class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 md:px-8"
+			>
+				<a
+					href="/"
+					class="text-lg font-bold tracking-tight text-[var(--ks-primary)]"
+				>
+					Kim Scheduler
+				</a>
+
+				<div class="hidden items-center gap-6 md:flex">
+					<a
+						href="#beneficios"
+						class="text-sm font-medium text-[var(--ks-text-muted)] hover:text-[var(--ks-primary)]"
+					>
+						Beneficios
+					</a>
+					<a
+						href="/playground"
+						class="text-sm font-medium text-[var(--ks-text-muted)] hover:text-[var(--ks-primary)]"
+					>
+						Playground
+					</a>
+					<a
+						href="/playground"
+						class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-semibold text-[var(--ks-primary)] transition hover:bg-[var(--ks-primary-muted)] hover:text-white"
+					>
+						Probar demo
+					</a>
+				</div>
+
+				<a
+					href="/playground"
+					class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-semibold text-white md:hidden"
+				>
+					Demo
+				</a>
+			</nav>
+		</header>
+
+		<main>
+			<section
+				class="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-12 px-4 py-16 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:py-24"
+			>
+				<div>
+					<p
+						class="mb-4 inline-flex rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-sm font-semibold text-[var(--ks-secondary)]"
+					>
+						Gestión de citas para negocios locales
+					</p>
+
+					<h1
+						class="max-w-3xl text-4xl font-bold tracking-tight text-[var(--ks-text)] sm:text-5xl md:text-6xl"
+					>
+						Simplifica la agenda de tu negocio local
+					</h1>
+
+					<p
+						class="mt-6 max-w-2xl text-lg leading-8 text-[var(--ks-text-muted)]"
+					>
+						Gestiona citas, servicios y horarios desde un solo
+						lugar. Una herramienta simple, clara y preparada para
+						crecer contigo.
+					</p>
+
+					<div class="mt-8 flex flex-col gap-3 sm:flex-row">
+						<a
+							href="/playground"
+							class="inline-flex items-center justify-center rounded-full bg-[var(--ks-primary)] px-6 py-3 text-sm font-bold text-white transition hover:bg-[var(--ks-secondary)]"
+						>
+							Ver demo
+						</a>
+
+						<a
+							href="/playground"
+							class="inline-flex items-center justify-center rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-6 py-3 text-sm font-bold text-[var(--ks-secondary)] transition hover:bg-[var(--ks-surface-soft)]"
+						>
+							Probar playground
+						</a>
+					</div>
+				</div>
+
+				<div
+					class="ks-card-shadow rounded-[2rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-4"
+				>
+					<div
+						class="rounded-[1.5rem] bg-[var(--ks-surface-soft)] p-5"
+					>
+						<div class="mb-5 flex items-center justify-between">
+							<div>
+								<p
+									class="text-sm font-semibold text-[var(--ks-text-muted)]"
+								>
+									Agenda de hoy
+								</p>
+								<h2
+									class="mt-1 text-2xl font-bold text-[var(--ks-text)]"
+								>
+									8 citas
+								</h2>
+							</div>
+
+							<span
+								class="rounded-full bg-[var(--ks-primary-soft)] px-3 py-1 text-xs font-bold text-[var(--ks-primary)]"
+							>
+								Activo
+							</span>
+						</div>
+
+						<div class="space-y-3">
+							<div class="rounded-2xl bg-[var(--ks-surface)] p-4">
+								<p
+									class="text-sm font-bold text-[var(--ks-text)]"
+								>
+									Corte clásico
+								</p>
+								<p
+									class="mt-1 text-sm text-[var(--ks-text-muted)]"
+								>
+									10:00 AM · Barbería Nova
+								</p>
+							</div>
+
+							<div
+								class="rounded-2xl bg-[var(--ks-primary-soft)] p-4"
+							>
+								<p
+									class="text-sm font-bold text-[var(--ks-primary)]"
+								>
+									Corte + barba
+								</p>
+								<p
+									class="mt-1 text-sm text-[var(--ks-primary)]"
+								>
+									12:30 PM · Confirmada
+								</p>
+							</div>
+
+							<div class="rounded-2xl bg-[var(--ks-surface)] p-4">
+								<p
+									class="text-sm font-bold text-[var(--ks-text)]"
+								>
+									Consulta inicial
+								</p>
+								<p
+									class="mt-1 text-sm text-[var(--ks-text-muted)]"
+								>
+									04:00 PM · Pendiente
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section
+				id="beneficios"
+				class="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8"
+			>
+				<div class="mb-10 text-center">
+					<h2
+						class="text-3xl font-bold tracking-tight text-[var(--ks-text)]"
+					>
+						Diseñado para operar sin complicaciones
+					</h2>
+					<p
+						class="mx-auto mt-3 max-w-2xl text-[var(--ks-text-muted)]"
+					>
+						Kim Scheduler empieza simple, pero está pensado para
+						convertirse en una plataforma SaaS escalable.
+					</p>
+				</div>
+
+				<div class="grid gap-5 md:grid-cols-3">
+					{
+						benefits.map((benefit) => (
+							<article class="ks-card-shadow rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-6">
+								<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--ks-surface-soft)] text-lg font-bold text-[var(--ks-primary)]">
+									✓
+								</div>
+
+								<h3 class="text-xl font-bold text-[var(--ks-text)]">
+									{benefit.title}
+								</h3>
+
+								<p class="mt-3 leading-7 text-[var(--ks-text-muted)]">
+									{benefit.description}
+								</p>
+							</article>
+						))
+					}
+				</div>
+			</section>
+		</main>
+
+		<footer
+			class="border-t border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-8 md:px-8"
+		>
+			<div
+				class="mx-auto flex w-full max-w-6xl flex-col gap-3 text-sm text-[var(--ks-text-muted)] md:flex-row md:items-center md:justify-between"
+			>
+				<p>© 2026 Kim Scheduler.</p>
+				<p>Proyecto open source en desarrollo.</p>
+			</div>
+		</footer>
+	</body>
+</html>

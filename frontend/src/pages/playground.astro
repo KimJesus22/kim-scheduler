@@ -1,0 +1,214 @@
+---
+import "../styles/global.css";
+
+const apiUrl = "http://localhost:5083";
+---
+
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Playground | Kim Scheduler</title>
+    </head>
+
+    <body>
+        <main
+            class="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-4 py-6 md:px-8"
+        >
+            <header
+                class="flex flex-col gap-4 rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow md:flex-row md:items-center md:justify-between"
+            >
+                <div>
+                    <a
+                        href="/"
+                        class="text-sm font-semibold text-[var(--ks-secondary)] hover:text-[var(--ks-primary)]"
+                    >
+                        ← Volver a landing
+                    </a>
+
+                    <h1
+                        class="mt-3 text-3xl font-bold tracking-tight text-[var(--ks-text)]"
+                    >
+                        Playground técnico
+                    </h1>
+
+                    <p class="mt-2 text-[var(--ks-text-muted)]">
+                        Zona temporal para probar endpoints del backend durante
+                        desarrollo.
+                    </p>
+                </div>
+
+                <div
+                    class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-bold text-[var(--ks-primary)]"
+                >
+                    API local: {apiUrl}
+                </div>
+            </header>
+
+            <section class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                <article
+                    class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+                >
+                    <p class="text-sm font-bold text-[var(--ks-secondary)]">
+                        Health check
+                    </p>
+                    <h2 class="mt-2 text-xl font-bold">
+                        Conexión a base de datos
+                    </h2>
+                    <p
+                        class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
+                    >
+                        Prueba si la API puede conectarse a MariaDB.
+                    </p>
+
+                    <button
+                        id="checkDatabaseButton"
+                        class="mt-5 w-full rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+                    >
+                        Probar conexión
+                    </button>
+                </article>
+
+                <article
+                    class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+                >
+                    <p class="text-sm font-bold text-[var(--ks-secondary)]">
+                        Negocios
+                    </p>
+                    <h2 class="mt-2 text-xl font-bold">Listar negocios</h2>
+                    <p
+                        class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
+                    >
+                        Obtiene los negocios guardados en MariaDB.
+                    </p>
+
+                    <button
+                        id="getBusinessesButton"
+                        class="mt-5 w-full rounded-full bg-[var(--ks-surface-soft)] px-4 py-3 text-sm font-bold text-[var(--ks-primary)] hover:bg-[var(--ks-primary-soft)]"
+                    >
+                        Ver negocios
+                    </button>
+                </article>
+
+                <article
+                    class="rounded-[1.5rem] border border-dashed border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-5"
+                >
+                    <p class="text-sm font-bold text-[var(--ks-text-muted)]">
+                        Citas
+                    </p>
+                    <h2
+                        class="mt-2 text-xl font-bold text-[var(--ks-text-muted)]"
+                    >
+                        Próximamente
+                    </h2>
+                    <p
+                        class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
+                    >
+                        Aquí probaremos reservar, confirmar y cancelar citas.
+                    </p>
+                </article>
+            </section>
+
+            <section
+                class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+            >
+                <div
+                    class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+                >
+                    <div>
+                        <h2 class="text-xl font-bold">Respuesta del backend</h2>
+                        <p class="text-sm text-[var(--ks-text-muted)]">
+                            Aquí verás el JSON que regrese la API.
+                        </p>
+                    </div>
+
+                    <button
+                        id="clearResultButton"
+                        class="rounded-full border border-[var(--ks-border)] px-4 py-2 text-sm font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-soft)]"
+                    >
+                        Limpiar
+                    </button>
+                </div>
+
+                <pre
+                    id="resultBox"
+                    class="mt-5 min-h-40 overflow-auto rounded-2xl bg-[var(--ks-surface-soft)] p-4 text-sm text-[var(--ks-text)]">Sin respuesta todavía.</pre>
+            </section>
+        </main>
+
+        <script>
+            const apiUrl = "http://localhost:5083";
+
+            const resultBox =
+                document.querySelector<HTMLPreElement>("#resultBox");
+            const checkDatabaseButton =
+                document.querySelector<HTMLButtonElement>(
+                    "#checkDatabaseButton",
+                );
+            const getBusinessesButton =
+                document.querySelector<HTMLButtonElement>(
+                    "#getBusinessesButton",
+                );
+            const clearResultButton =
+                document.querySelector<HTMLButtonElement>("#clearResultButton");
+
+            type ApiResult = {
+                statusCode: number;
+                ok: boolean;
+                data: unknown;
+            };
+
+            function showResult(data: unknown): void {
+                if (!resultBox) return;
+
+                resultBox.textContent = JSON.stringify(data, null, 2);
+            }
+
+            async function requestJson(url: string): Promise<ApiResult> {
+                const response = await fetch(url);
+                const data: unknown = await response.json();
+
+                return {
+                    statusCode: response.status,
+                    ok: response.ok,
+                    data,
+                };
+            }
+
+            checkDatabaseButton?.addEventListener("click", async () => {
+                try {
+                    const result = await requestJson(
+                        `${apiUrl}/api/health/database`,
+                    );
+                    showResult(result);
+                } catch {
+                    showResult({
+                        ok: false,
+                        message:
+                            "No se pudo conectar con la API. Revisa que el backend esté corriendo.",
+                    });
+                }
+            });
+
+            getBusinessesButton?.addEventListener("click", async () => {
+                try {
+                    const result = await requestJson(
+                        `${apiUrl}/api/businesses`,
+                    );
+                    showResult(result);
+                } catch {
+                    showResult({
+                        ok: false,
+                        message: "No se pudo obtener la lista de negocios.",
+                    });
+                }
+            });
+
+            clearResultButton?.addEventListener("click", () => {
+                if (!resultBox) return;
+
+                resultBox.textContent = "Sin respuesta todavía.";
+            });
+        </script>
+    </body>
+</html>
