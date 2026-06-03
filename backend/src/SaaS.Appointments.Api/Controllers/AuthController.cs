@@ -108,4 +108,80 @@ public class AuthController : ControllerBase
             response
         );
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        // Normalizamos el email para que el login no falle por mayúsculas o espacios.
+        var email = request.Email.Trim().ToLower();
+        var password = request.Password;
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return BadRequest(new
+            {
+                message = "El email es obligatorio."
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            return BadRequest(new
+            {
+                message = "La contraseña es obligatoria."
+            });
+        }
+
+        // Buscamos el usuario por email.
+        // Como Email tiene índice único, debería existir máximo un usuario con ese correo.
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(x => x.Email == email);
+
+        // Por seguridad usamos un mensaje genérico.
+        // No decimos si falló el email o la contraseña para no dar pistas.
+        if (user is null)
+        {
+            return Unauthorized(new
+            {
+                message = "Credenciales inválidas."
+            });
+        }
+
+        if (!user.IsActive)
+        {
+            return Unauthorized(new
+            {
+                message = "La cuenta está desactivada."
+            });
+        }
+
+        // PasswordHasher compara la contraseña escrita con el hash guardado.
+        // No desencripta el hash; solo verifica si coinciden.
+        var passwordHasher = new PasswordHasher<User>();
+
+        var passwordVerificationResult = passwordHasher.VerifyHashedPassword(
+            user,
+            user.PasswordHash,
+            password
+        );
+
+        if (passwordVerificationResult == PasswordVerificationResult.Failed)
+        {
+            return Unauthorized(new
+            {
+                message = "Credenciales inválidas."
+            });
+        }
+
+        var response = new LoginResponse
+        {
+            Id = user.Id,
+            FullName = user.FullName,
+            Email = user.Email,
+            Role = user.Role,
+            IsActive = user.IsActive
+        };
+
+        return Ok(response);
+    }
 }

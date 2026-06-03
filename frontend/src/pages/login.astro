@@ -1,0 +1,259 @@
+---
+import "../styles/global.css";
+
+// URL local de la API.
+// Después la moveremos a una variable de entorno para producción.
+const apiUrl = "http://localhost:5083";
+---
+
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Login | Kim Scheduler</title>
+        <meta name="description" content="Iniciar sesión en Kim Scheduler." />
+    </head>
+
+    <body>
+        <main
+            class="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10"
+        >
+            <!-- Fondo decorativo suave para mantener la identidad visual del proyecto. -->
+            <div class="pointer-events-none fixed inset-0 -z-10 opacity-50">
+                <div
+                    class="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[var(--ks-secondary-soft)] blur-3xl"
+                >
+                </div>
+                <div
+                    class="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-[var(--ks-primary-soft)] blur-3xl"
+                >
+                </div>
+            </div>
+
+            <section class="w-full max-w-md">
+                <header class="mb-6 text-center">
+                    <a
+                        href="/"
+                        class="text-3xl font-bold tracking-tight text-[var(--ks-primary)]"
+                    >
+                        Kim Scheduler
+                    </a>
+
+                    <p class="mt-2 text-sm text-[var(--ks-text-muted)]">
+                        Bienvenido de vuelta. Organiza tu día.
+                    </p>
+                </header>
+
+                <article
+                    class="ks-card-shadow rounded-[1.75rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-6 md:p-8"
+                >
+                    <div class="mb-6">
+                        <h1 class="text-2xl font-bold text-[var(--ks-text)]">
+                            Iniciar sesión
+                        </h1>
+
+                        <p
+                            class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
+                        >
+                            Accede con tu correo y contraseña registrados.
+                        </p>
+                    </div>
+
+                    <form id="loginForm" class="space-y-4">
+                        <label class="block">
+                            <span
+                                class="mb-1 block text-sm font-semibold text-[var(--ks-text)]"
+                            >
+                                Correo electrónico
+                            </span>
+
+                            <input
+                                id="emailInput"
+                                class="w-full rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none transition focus:border-[var(--ks-primary)] focus:bg-[var(--ks-surface)]"
+                                type="email"
+                                placeholder="martin@test.com"
+                                required
+                            />
+                        </label>
+
+                        <label class="block">
+                            <span
+                                class="mb-1 block text-sm font-semibold text-[var(--ks-text)]"
+                            >
+                                Contraseña
+                            </span>
+
+                            <div class="relative">
+                                <input
+                                    id="passwordInput"
+                                    class="w-full rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 pr-24 text-sm outline-none transition focus:border-[var(--ks-primary)] focus:bg-[var(--ks-surface)]"
+                                    type="password"
+                                    placeholder="Tu contraseña"
+                                    required
+                                />
+
+                                <button
+                                    id="togglePasswordButton"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-xs font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-muted)]"
+                                    type="button"
+                                >
+                                    Mostrar
+                                </button>
+                            </div>
+                        </label>
+
+                        <!-- Aquí mostramos errores o éxito sin recargar la página. -->
+                        <div
+                            id="formMessage"
+                            class="hidden rounded-2xl border p-4 text-sm leading-6"
+                        >
+                        </div>
+
+                        <button
+                            class="w-full rounded-full bg-[var(--ks-primary)] px-5 py-3 text-sm font-bold text-white transition hover:bg-[var(--ks-secondary)]"
+                            type="submit"
+                        >
+                            Iniciar sesión
+                        </button>
+                    </form>
+                </article>
+
+                <p class="mt-6 text-center text-sm text-[var(--ks-text-muted)]">
+                    ¿No tienes una cuenta?
+                    <a
+                        href="/register"
+                        class="font-bold text-[var(--ks-primary)] hover:underline"
+                    >
+                        Crear una cuenta
+                    </a>
+                </p>
+            </section>
+        </main>
+
+        <script>
+            const apiUrl = "http://localhost:5083";
+
+            // Referencias tipadas al formulario y campos.
+            // Así TypeScript sabe que .value existe en los inputs.
+            const loginForm =
+                document.querySelector<HTMLFormElement>("#loginForm");
+            const emailInput =
+                document.querySelector<HTMLInputElement>("#emailInput");
+            const passwordInput =
+                document.querySelector<HTMLInputElement>("#passwordInput");
+            const togglePasswordButton =
+                document.querySelector<HTMLButtonElement>(
+                    "#togglePasswordButton",
+                );
+            const formMessage =
+                document.querySelector<HTMLDivElement>("#formMessage");
+
+            type LoginResponse = {
+                id: string;
+                fullName: string;
+                email: string;
+                role: number;
+                isActive: boolean;
+            };
+
+            type ApiErrorResponse = {
+                message?: string;
+            };
+
+            // Muestra mensajes amigables al usuario.
+            // No mostramos directamente "401 Unauthorized", sino un texto entendible.
+            function showFormMessage(
+                message: string,
+                type: "success" | "error",
+            ): void {
+                if (!formMessage) return;
+
+                formMessage.classList.remove("hidden");
+
+                if (type === "success") {
+                    formMessage.className =
+                        "rounded-2xl border border-[var(--ks-primary-soft)] bg-[var(--ks-primary-soft)] p-4 text-sm leading-6 text-[var(--ks-primary)]";
+                } else {
+                    formMessage.className =
+                        "rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700";
+                }
+
+                formMessage.textContent = message;
+            }
+
+            // Permite alternar entre password/text para ver u ocultar la contraseña.
+            togglePasswordButton?.addEventListener("click", () => {
+                if (!passwordInput || !togglePasswordButton) return;
+
+                const isPasswordVisible = passwordInput.type === "text";
+
+                passwordInput.type = isPasswordVisible ? "password" : "text";
+                togglePasswordButton.textContent = isPasswordVisible
+                    ? "Mostrar"
+                    : "Ocultar";
+            });
+
+            loginForm?.addEventListener("submit", async (event) => {
+                // Evita que el navegador recargue la página al enviar el formulario.
+                event.preventDefault();
+
+                if (!emailInput || !passwordInput) {
+                    showFormMessage(
+                        "No se encontraron los campos del formulario.",
+                        "error",
+                    );
+                    return;
+                }
+
+                // Este payload coincide con LoginRequest del backend.
+                const payload = {
+                    email: emailInput.value.trim().toLowerCase(),
+                    password: passwordInput.value,
+                };
+
+                try {
+                    const response = await fetch(`${apiUrl}/api/auth/login`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                    const data: LoginResponse | ApiErrorResponse =
+                        await response.json();
+
+                    if (!response.ok) {
+                        // TypeScript no sabe si data tiene message, por eso verificamos primero.
+                        const errorMessage =
+                            "message" in data
+                                ? data.message
+                                : "No se pudo iniciar sesión.";
+
+                        showFormMessage(
+                            errorMessage ?? "No se pudo iniciar sesión.",
+                            "error",
+                        );
+
+                        return;
+                    }
+
+                    const loggedUser = data as LoginResponse;
+
+                    showFormMessage(
+                        `Bienvenido, ${loggedUser.fullName}. Login correcto. Rol: ${loggedUser.role}.`,
+                        "success",
+                    );
+
+                    // TODO: En el siguiente bloque guardaremos aquí el JWT cuando el backend lo genere.
+                    // localStorage.setItem("kim_scheduler_token", loggedUser.token);
+                } catch {
+                    showFormMessage(
+                        "No se pudo conectar con la API. Revisa que el backend esté corriendo.",
+                        "error",
+                    );
+                }
+            });
+        </script>
+    </body>
+</html>
