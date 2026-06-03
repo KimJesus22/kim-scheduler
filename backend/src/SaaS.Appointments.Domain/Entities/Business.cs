@@ -21,4 +21,6 @@ public class Business
     public List<BusinessHour> BusinessHours { get; set; } = new();
 
     public List<Appointment> Appointments { get; set; } = new();
+
+    public List<User> Users { get; set; } = new();
 }

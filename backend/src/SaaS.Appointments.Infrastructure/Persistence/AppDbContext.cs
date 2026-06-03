@@ -18,6 +18,10 @@ public class AppDbContext : DbContext
 
     public DbSet<Appointment> Appointments => Set<Appointment>();
 
+    // Representa la tabla de usuarios del sistema.
+    // Aquí vivirán administradores y staff que podrán iniciar sesión.
+    public DbSet<User> Users => Set<User>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -26,6 +30,9 @@ public class AppDbContext : DbContext
         ConfigureService(modelBuilder);
         ConfigureBusinessHour(modelBuilder);
         ConfigureAppointment(modelBuilder);
+
+        // Configura la tabla users y sus reglas en MariaDB.
+        ConfigureUser(modelBuilder);
     }
 
     private static void ConfigureBusiness(ModelBuilder modelBuilder)
@@ -165,6 +172,58 @@ public class AppDbContext : DbContext
                 x.BusinessId,
                 x.StartAtUtc
             });
+        });
+    }
+
+    private static void ConfigureUser(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>(entity =>
+        {
+            // Nombre real de la tabla en MariaDB.
+            entity.ToTable("users");
+
+            // Llave primaria de la tabla.
+            entity.HasKey(x => x.Id);
+
+            // El nombre completo es obligatorio para identificar al usuario en el panel.
+            entity.Property(x => x.FullName)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            // El email será usado para login, por eso es obligatorio.
+            entity.Property(x => x.Email)
+                .IsRequired()
+                .HasMaxLength(180);
+
+            // Evita que existan dos usuarios con el mismo email.
+            // Esto es importante porque el email será el identificador de login.
+            entity.HasIndex(x => x.Email)
+                .IsUnique();
+
+            // Aquí guardamos el hash, nunca la contraseña en texto plano.
+            entity.Property(x => x.PasswordHash)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            // Guardamos el rol como número:
+            // Admin = 1, Staff = 2.
+            entity.Property(x => x.Role)
+                .IsRequired();
+
+            // Permite desactivar usuarios sin borrarlos físicamente.
+            entity.Property(x => x.IsActive)
+                .IsRequired();
+
+            entity.Property(x => x.CreatedAtUtc)
+                .IsRequired();
+
+            // Relación opcional:
+            // un usuario puede pertenecer a un negocio,
+            // pero también puede existir sin negocio asignado todavía.
+            entity.HasOne(x => x.Business)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.BusinessId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
     }
 }
