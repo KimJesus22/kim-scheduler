@@ -78,15 +78,25 @@ public class AuthController : ControllerBase
             });
         }
 
+        // Revisamos si ya existe al menos un usuario en la tabla users.
+        // Esta regla facilita el uso open source del proyecto:
+        // - si no hay usuarios, el primero será Admin;
+        // - si ya hay usuarios, los siguientes serán Staff.
+        var hasAnyUser = await _dbContext.Users.AnyAsync();
+
+        var assignedRole = hasAnyUser
+            ? UserRole.Staff
+            : UserRole.Admin;
+
         var user = new User
         {
             Id = Guid.NewGuid(),
             FullName = fullName,
             Email = email,
 
-            // El backend asigna el rol.
-            // El frontend no puede decidir si alguien será Admin.
-            Role = UserRole.Staff,
+            // El frontend no decide el rol.
+            // El backend lo asigna de forma controlada.
+            Role = assignedRole,
 
             IsActive = true,
             CreatedAtUtc = DateTime.UtcNow

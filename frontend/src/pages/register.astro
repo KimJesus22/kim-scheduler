@@ -60,22 +60,19 @@ const apiUrl = "http://localhost:5083";
                         </p>
                     </div>
 
-                    <!-- Aviso importante: el usuario no elige su rol.
-               El backend asigna Staff por seguridad. -->
-                    <div
-                        class="mb-6 rounded-2xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-4"
-                    >
-                        <p class="text-sm font-bold text-[var(--ks-text)]">
-                            Rol inicial: Staff
-                        </p>
+<!-- Aviso importante:
+     El usuario no elige su rol.
+     Si es el primer usuario del sistema, será Admin.
+     Si ya existen usuarios, será Staff. -->
+<div class="mb-6 rounded-2xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-4">
+  <p class="text-sm font-bold text-[var(--ks-text)]">
+    Rol asignado automáticamente
+  </p>
 
-                        <p
-                            class="mt-1 text-sm leading-6 text-[var(--ks-text-muted)]"
-                        >
-                            Tu cuenta iniciará como Staff. Más adelante un
-                            administrador podrá cambiar permisos desde el panel.
-                        </p>
-                    </div>
+  <p class="mt-1 text-sm leading-6 text-[var(--ks-text-muted)]">
+    Si eres el primer usuario del sistema, tu cuenta será Admin. Si ya existen usuarios, iniciarás como Staff.
+  </p>
+</div>
 
                     <form id="registerForm" class="space-y-4">
                         <label class="block">
@@ -338,7 +335,7 @@ const apiUrl = "http://localhost:5083";
                     const registeredUser = data as RegisterResponse;
 
                     showFormMessage(
-                        `Cuenta creada correctamente para ${registeredUser.fullName}. Rol inicial: Staff.`,
+                        `Cuenta creada correctamente para ${registeredUser.fullName}. Rol asignado: ${registeredUser.role}.`,
                         "success",
                     );
 
