@@ -154,6 +154,10 @@ const apiUrl = "http://localhost:5083";
                 email: string;
                 role: number;
                 isActive: boolean;
+
+                // Token JWT que devuelve el backend cuando el login es correcto.
+                // Lo guardaremos temporalmente en localStorage para usarlo en futuras peticiones.
+                token: string;
             };
 
             type ApiErrorResponse = {
@@ -240,13 +244,34 @@ const apiUrl = "http://localhost:5083";
 
                     const loggedUser = data as LoginResponse;
 
+                    // Guardamos el JWT en localStorage para poder usarlo después
+                    // en peticiones protegidas con Authorization: Bearer {token}.
+                    // Nota: para producción real revisaremos opciones más seguras,
+                    // pero para este MVP local nos sirve para aprender el flujo.
+                    localStorage.setItem("kim_scheduler_token", loggedUser.token);
+
+                    // Guardamos también datos básicos no sensibles del usuario.
+                    // Esto ayuda a mostrar nombre/rol en el frontend sin pedirlo otra vez al backend.
+                    localStorage.setItem(
+                        "kim_scheduler_user",
+                        JSON.stringify({
+                            id: loggedUser.id,
+                            fullName: loggedUser.fullName,
+                            email: loggedUser.email,
+                            role: loggedUser.role,
+                        })
+                    );
+
                     showFormMessage(
-                        `Bienvenido, ${loggedUser.fullName}. Login correcto. Rol: ${loggedUser.role}.`,
+                        `Bienvenido, ${loggedUser.fullName}. Token guardado correctamente.`,
                         "success",
                     );
 
-                    // TODO: En el siguiente bloque guardaremos aquí el JWT cuando el backend lo genere.
-                    // localStorage.setItem("kim_scheduler_token", loggedUser.token);
+                    // Después de guardar el token, mandamos al usuario al playground.
+                    // Más adelante esto podría mandar a /admin/dashboard.
+                    setTimeout(() => {
+                        window.location.href = "/playground";
+                    }, 800);
                 } catch {
                     showFormMessage(
                         "No se pudo conectar con la API. Revisa que el backend esté corriendo.",

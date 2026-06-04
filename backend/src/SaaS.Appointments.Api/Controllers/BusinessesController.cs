@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SaaS.Appointments.Api.Contracts.Businesses;
@@ -25,6 +26,10 @@ public class BusinessesController : ControllerBase
 
     // POST /api/businesses (Crear Negocio):
     // Endpoint RESTful encargado del registro y persistencia de un nuevo negocio local.
+    // Solo usuarios autenticados podrán crear negocios.
+    // Más adelante podemos limitarlo a Admin con:
+    // [Authorize(Roles = "Admin")]
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateBusiness(CreateBusinessRequest request)
     {

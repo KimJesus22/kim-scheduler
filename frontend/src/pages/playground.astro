@@ -41,11 +41,22 @@ const apiUrl = "http://localhost:5083";
                     </p>
                 </div>
 
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <div
                     class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-bold text-[var(--ks-primary)]"
                 >
                     API local: {apiUrl}
                 </div>
+
+                <!-- Cierra sesión eliminando el JWT guardado en el navegador. -->
+                <button
+                    id="logoutButton"
+                    class="rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-sm font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-soft)]"
+                    type="button"
+                >
+                    Cerrar sesión
+                </button>
+            </div>
             </header>
 
             {/* 
@@ -269,6 +280,16 @@ const apiUrl = "http://localhost:5083";
             // CLIENT-SIDE SCRIPT: Este código se descarga y ejecuta enteramente en el navegador del cliente.
             const apiUrl = "http://localhost:5083";
 
+            // Revisamos si existe un JWT guardado en localStorage.
+            // Si no hay token, significa que el usuario no inició sesión.
+            const storedToken = localStorage.getItem("kim_scheduler_token");
+
+            // /playground es una herramienta interna de desarrollo.
+            // Si el usuario no tiene token, lo mandamos a /login.
+            if (!storedToken) {
+              window.location.href = "/login";
+            }
+
             // querySelector con Genéricos de TypeScript (<HTMLButtonElement> / <HTMLDivElement>):
             // Por defecto, querySelector retorna un tipo genérico 'Element' que carece de métodos específicos.
             // Al castearlo explícitamente, le enseñamos a TypeScript qué clase de objeto DOM es. Esto habilita:
@@ -286,6 +307,9 @@ const apiUrl = "http://localhost:5083";
                 );
             const clearResultButton =
                 document.querySelector<HTMLButtonElement>("#clearResultButton");
+
+            // Botón para cerrar sesión desde el playground.
+            const logoutButton = document.querySelector<HTMLButtonElement>("#logoutButton");
 
             const deactivateBadBusinessButton = document.querySelector<HTMLButtonElement>(
                 "#deactivateBadBusinessButton"
@@ -475,6 +499,29 @@ const apiUrl = "http://localhost:5083";
                 };
             }
 
+            // Lee el JWT guardado después del login.
+            // Si el usuario no ha iniciado sesión, regresará null.
+            function getAuthToken(): string | null {
+              return localStorage.getItem("kim_scheduler_token");
+            }
+
+            // Construye headers para endpoints protegidos.
+            // Authorization: Bearer {token} es lo que ASP.NET Core espera para validar JWT.
+            function getAuthHeaders(): HeadersInit {
+              const token = getAuthToken();
+
+              if (!token) {
+                return {
+                  "Content-Type": "application/json",
+                };
+              }
+
+              return {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+              };
+            }
+
             // LISTENERS DE INTERACCIÓN CLIENTE:
             
             // 1. Health check de base de datos (petición GET de diagnóstico)
@@ -550,13 +597,25 @@ const apiUrl = "http://localhost:5083";
                     email: businessEmailInput?.value.trim() || null,
                 };
 
+                // Crear negocio ya está protegido con [Authorize].
+                // Si no hay token, avisamos antes de llamar al backend.
+                if (!getAuthToken()) {
+                  showResult({
+                    ok: false,
+                    message: "Necesitas iniciar sesión antes de crear negocios.",
+                  });
+
+                  return;
+                }
+
                 try {
                     // Enviamos el negocio al backend usando POST.
                     const result = await requestJson(`${apiUrl}/api/businesses`, {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
+
+                        // Mandamos el JWT en Authorization para pasar [Authorize].
+                        headers: getAuthHeaders(),
+
                         body: JSON.stringify(payload),
                     });
 
@@ -624,6 +683,16 @@ const apiUrl = "http://localhost:5083";
                 if (!resultBox) return;
 
                 resultBox.textContent = "Sin respuesta todavía.";
+            });
+
+            logoutButton?.addEventListener("click", () => {
+                // Eliminamos el token y los datos básicos del usuario.
+                // Sin token, el usuario ya no puede entrar al playground ni usar endpoints protegidos.
+                localStorage.removeItem("kim_scheduler_token");
+                localStorage.removeItem("kim_scheduler_user");
+
+                // Redirigimos al login para que pueda volver a autenticarse.
+                window.location.href = "/login";
             });
         </script>
     </body>

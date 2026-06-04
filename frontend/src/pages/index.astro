@@ -6,17 +6,45 @@ const benefits = [
 		title: "Fácil de usar",
 		description:
 			"Una interfaz clara para que cualquier negocio pueda gestionar citas sin curva de aprendizaje complicada.",
+		icon: "calendar",
 	},
 	{
 		title: "Pensado para negocios locales",
 		description:
 			"Ideal para barberías, estéticas, consultorios, spas y servicios que trabajan con horarios.",
+		icon: "store",
 	},
 	{
 		title: "Preparado para crecer",
 		description:
 			"Base lista para futuras integraciones con Telegram, IA, recordatorios y panel administrativo.",
+		icon: "rocket",
 	},
+];
+
+const steps = [
+	{
+		number: "01",
+		title: "Crea tu negocio",
+		description: "Registra tu negocio local con nombre, slug único y datos de contacto.",
+	},
+	{
+		number: "02",
+		title: "Configura servicios",
+		description: "Define los servicios que ofreces, duración y precio de cada uno.",
+	},
+	{
+		number: "03",
+		title: "Recibe citas",
+		description: "Tus clientes reservan en línea y tú gestionas todo desde un solo lugar.",
+	},
+];
+
+const stats = [
+	{ value: "5", label: "Tablas en la base de datos" },
+	{ value: "4", label: "Endpoints activos" },
+	{ value: "100%", label: "Open source" },
+	{ value: "JWT", label: "Autenticación segura" },
 ];
 ---
 
@@ -24,72 +52,107 @@ const benefits = [
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Kim Scheduler</title>
+		<title>Kim Scheduler — Gestión de citas para negocios locales</title>
 		<meta
 			name="description"
-			content="SaaS de gestión de citas para pequeños negocios locales."
+			content="SaaS de gestión de citas para pequeños negocios locales. Simplifica tu agenda con una herramienta clara y escalable."
 		/>
 	</head>
 
 	<body>
+		<!-- Fondo decorativo global con círculos difuminados y patrón de puntos -->
+		<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden opacity-40">
+			<div class="dot-grid-pattern absolute inset-0"></div>
+			<div
+				class="animate-float-slow absolute -left-32 -top-32 h-[600px] w-[600px] rounded-full bg-[var(--ks-secondary-soft)] blur-[130px] opacity-60"
+			>
+			</div>
+			<div
+				class="animate-float-reverse absolute -bottom-32 -right-32 h-[600px] w-[600px] rounded-full bg-[var(--ks-primary-soft)] blur-[130px] opacity-60"
+			>
+			</div>
+			<div
+				class="animate-float-slow absolute left-1/2 top-1/3 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-[var(--ks-accent-soft)] opacity-20 blur-[110px]"
+			>
+			</div>
+		</div>
+
 		<header
-			class="sticky top-0 z-50 border-b border-[var(--ks-border)] bg-[var(--ks-background)]/90 backdrop-blur"
+			class="sticky top-0 z-50 border-b border-[var(--ks-border)] bg-[var(--ks-background)]/85 backdrop-blur-md"
 		>
 			<nav
 				class="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 md:px-8"
 			>
 				<a
 					href="/"
-					class="text-lg font-bold tracking-tight text-[var(--ks-primary)]"
+					class="text-lg font-bold tracking-tight text-[var(--ks-primary)] flex items-center gap-2 hover:opacity-90 transition"
 				>
+					<span class="inline-block h-6 w-6 rounded-lg bg-[var(--ks-primary)] text-white text-center leading-6 font-black text-sm">K</span>
 					Kim Scheduler
 				</a>
 
 				<div class="hidden items-center gap-6 md:flex">
 					<a
 						href="#beneficios"
-						class="text-sm font-medium text-[var(--ks-text-muted)] hover:text-[var(--ks-primary)]"
+						class="text-sm font-medium text-[var(--ks-text-muted)] transition hover:text-[var(--ks-primary)]"
 					>
 						Beneficios
 					</a>
+
 					<a
-						href="/playground"
-						class="text-sm font-medium text-[var(--ks-text-muted)] hover:text-[var(--ks-primary)]"
+						href="#como-funciona"
+						class="text-sm font-medium text-[var(--ks-text-muted)] transition hover:text-[var(--ks-primary)]"
 					>
-						Playground
+						Cómo funciona
 					</a>
+
+					<!-- Link público para iniciar sesión. -->
 					<a
-						href="/playground"
-						class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-semibold text-[var(--ks-primary)] transition hover:bg-[var(--ks-primary-muted)] hover:text-white"
+						href="/login"
+						class="text-sm font-medium text-[var(--ks-text-muted)] transition hover:text-[var(--ks-primary)]"
 					>
-						Probar demo
+						Iniciar sesión
+					</a>
+
+					<!-- Botón principal para crear cuenta. -->
+					<a
+						href="/register"
+						class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[var(--ks-secondary)] shadow-sm hover:shadow"
+					>
+						Crear cuenta
 					</a>
 				</div>
 
 				<a
-					href="/playground"
-					class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-semibold text-white md:hidden"
+					href="/login"
+					class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-semibold text-white md:hidden shadow-sm"
 				>
-					Demo
+					Entrar
 				</a>
 			</nav>
 		</header>
 
 		<main>
+			<!-- Hero Section -->
 			<section
-				class="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-12 px-4 py-16 md:grid-cols-[1.05fr_0.95fr] md:px-8 md:py-24"
+				class="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-center gap-12 px-4 py-16 md:grid-cols-[1.1fr_0.9fr] md:px-8 md:py-20"
 			>
-				<div>
+				<div class="animate-fade-in-up">
 					<p
-						class="mb-4 inline-flex rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-sm font-semibold text-[var(--ks-secondary)]"
+						class="mb-4 inline-flex items-center gap-2 rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[var(--ks-secondary)]"
 					>
-						Gestión de citas para negocios locales
+						<span
+							class="inline-block h-2 w-2 animate-pulse rounded-full bg-[var(--ks-primary)]"
+						></span>
+						Gestión de citas simplificada
 					</p>
 
 					<h1
-						class="max-w-3xl text-4xl font-bold tracking-tight text-[var(--ks-text)] sm:text-5xl md:text-6xl"
+						class="max-w-3xl text-4xl font-black tracking-tight text-[var(--ks-text)] sm:text-5xl md:text-6xl leading-[1.1]"
 					>
-						Simplifica la agenda de tu negocio local
+						Simplifica la
+						<span class="text-[var(--ks-primary)] underline decoration-wavy decoration-[var(--ks-primary-soft)] underline-offset-8">agenda</span>
+						de tu negocio local
 					</h1>
 
 					<p
@@ -102,125 +165,260 @@ const benefits = [
 
 					<div class="mt-8 flex flex-col gap-3 sm:flex-row">
 						<a
-							href="/playground"
-							class="inline-flex items-center justify-center rounded-full bg-[var(--ks-primary)] px-6 py-3 text-sm font-bold text-white transition hover:bg-[var(--ks-secondary)]"
+							href="/register"
+							class="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--ks-primary)] px-8 py-4 text-sm font-bold text-white transition hover:bg-[var(--ks-secondary)] hover:shadow-lg"
 						>
-							Ver demo
+							Crear cuenta gratis
+							<span class="text-base">→</span>
 						</a>
 
 						<a
-							href="/playground"
-							class="inline-flex items-center justify-center rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-6 py-3 text-sm font-bold text-[var(--ks-secondary)] transition hover:bg-[var(--ks-surface-soft)]"
+							href="/login"
+							class="inline-flex items-center justify-center rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-8 py-4 text-sm font-bold text-[var(--ks-secondary)] transition hover:bg-[var(--ks-surface-soft)]"
 						>
-							Probar playground
+							Iniciar sesión
 						</a>
+					</div>
+
+					<!-- Mini stats bajo los CTAs -->
+					<div
+						class="mt-10 flex flex-wrap gap-6 border-t border-[var(--ks-border)] pt-8"
+					>
+						<div>
+							<p
+								class="text-2xl font-bold text-[var(--ks-primary)]"
+							>
+								100%
+							</p>
+							<p class="text-xs text-[var(--ks-text-muted)]">
+								Gratis y open source
+							</p>
+						</div>
+						<div>
+							<p
+								class="text-2xl font-bold text-[var(--ks-primary)]"
+							>
+								JWT
+							</p>
+							<p class="text-xs text-[var(--ks-text-muted)]">
+								Autenticación segura
+							</p>
+						</div>
+						<div>
+							<p
+								class="text-2xl font-bold text-[var(--ks-primary)]"
+							>
+								REST
+							</p>
+							<p class="text-xs text-[var(--ks-text-muted)]">
+								API moderna
+							</p>
+						</div>
 					</div>
 				</div>
 
-				<div
-					class="ks-card-shadow rounded-[2rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-4"
-				>
+				<!-- Card preview con animación de entrada y simulador interactivo -->
+				<div class="animate-fade-in-up-delayed">
 					<div
-						class="rounded-[1.5rem] bg-[var(--ks-surface-soft)] p-5"
+						class="ks-card-shadow rounded-[2rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-4 md:p-5 relative overflow-hidden"
 					>
-						<div class="mb-5 flex items-center justify-between">
-							<div>
-								<p
-									class="text-sm font-semibold text-[var(--ks-text-muted)]"
-								>
-									Agenda de hoy
-								</p>
-								<h2
-									class="mt-1 text-2xl font-bold text-[var(--ks-text)]"
-								>
-									8 citas
-								</h2>
+						<!-- Efecto de brillo sutil en esquina -->
+						<div class="absolute -right-20 -top-20 w-40 h-40 bg-[var(--ks-primary-soft)] rounded-full blur-2xl opacity-40 pointer-events-none"></div>
+						
+						<div
+							class="rounded-[1.5rem] bg-[var(--ks-surface-soft)] p-4 sm:p-5 relative z-10"
+						>
+							<!-- Selector de industrias / Segmented control -->
+							<div class="mb-5 flex rounded-xl bg-[var(--ks-surface-muted)] p-1">
+								<button id="industry-barber" class="industry-btn flex-1 rounded-lg py-1.5 text-xs font-bold transition-all bg-[var(--ks-surface)] text-[var(--ks-primary)] shadow-sm">
+									Barbería
+								</button>
+								<button id="industry-spa" class="industry-btn flex-1 rounded-lg py-1.5 text-xs font-bold transition-all text-[var(--ks-text-muted)] hover:text-[var(--ks-text)]">
+									Estética
+								</button>
+								<button id="industry-dental" class="industry-btn flex-1 rounded-lg py-1.5 text-xs font-bold transition-all text-[var(--ks-text-muted)] hover:text-[var(--ks-text)]">
+									Dental
+								</button>
 							</div>
 
-							<span
-								class="rounded-full bg-[var(--ks-primary-soft)] px-3 py-1 text-xs font-bold text-[var(--ks-primary)]"
-							>
-								Activo
-							</span>
-						</div>
+							<div class="mb-5 flex items-center justify-between">
+								<div>
+									<p
+										id="simulator-business-name"
+										class="text-xs font-bold uppercase tracking-wider text-[var(--ks-primary)]"
+									>
+										Barbería Nova
+									</p>
+									<h2
+										id="simulator-citas-count"
+										class="mt-0.5 text-2xl font-black text-[var(--ks-text)]"
+									>
+										3 citas hoy
+									</h2>
+								</div>
 
-						<div class="space-y-3">
-							<div class="rounded-2xl bg-[var(--ks-surface)] p-4">
-								<p
-									class="text-sm font-bold text-[var(--ks-text)]"
+								<span
+									class="inline-flex items-center gap-1.5 rounded-full bg-[var(--ks-primary-soft)] px-3 py-1 text-xs font-bold text-[var(--ks-primary)]"
 								>
-									Corte clásico
-								</p>
-								<p
-									class="mt-1 text-sm text-[var(--ks-text-muted)]"
-								>
-									10:00 AM · Barbería Nova
-								</p>
+									<span class="h-1.5 w-1.5 rounded-full bg-[var(--ks-primary)] animate-pulse"></span>
+									Simulador
+								</span>
 							</div>
 
-							<div
-								class="rounded-2xl bg-[var(--ks-primary-soft)] p-4"
-							>
-								<p
-									class="text-sm font-bold text-[var(--ks-primary)]"
-								>
-									Corte + barba
-								</p>
-								<p
-									class="mt-1 text-sm text-[var(--ks-primary)]"
-								>
-									12:30 PM · Confirmada
-								</p>
+							<!-- Simulador de reserva (Formulario interactivo oculto por defecto) -->
+							<div id="booking-simulator" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
+								<div class="mb-4 rounded-2xl border border-[var(--ks-primary-soft)] bg-[var(--ks-surface)] p-4 shadow-sm">
+									<h3 class="text-xs font-bold text-[var(--ks-primary)] mb-2 uppercase tracking-wide">Programar nueva cita</h3>
+									<form id="simulator-form" class="space-y-3">
+										<div>
+											<label class="block text-[10px] font-bold text-[var(--ks-text-muted)] uppercase mb-1">Nombre del cliente</label>
+											<input type="text" id="sim-customer-name" placeholder="Ej. Carlos Mendoza" class="w-full rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-3 py-2 text-xs outline-none focus:border-[var(--ks-primary)] focus:bg-[var(--ks-surface)] transition" required />
+										</div>
+										<div class="grid grid-cols-2 gap-2">
+											<div>
+												<label class="block text-[10px] font-bold text-[var(--ks-text-muted)] uppercase mb-1">Servicio</label>
+												<select id="sim-service" class="w-full rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-2 py-2 text-xs outline-none focus:border-[var(--ks-primary)] focus:bg-[var(--ks-surface)] transition">
+													<!-- Llenado dinámico -->
+												</select>
+											</div>
+											<div>
+												<label class="block text-[10px] font-bold text-[var(--ks-text-muted)] uppercase mb-1">Hora</label>
+												<select id="sim-time" class="w-full rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-2 py-2 text-xs outline-none focus:border-[var(--ks-primary)] focus:bg-[var(--ks-surface)] transition">
+													<option value="09:00 AM">09:00 AM</option>
+													<option value="11:30 AM">11:30 AM</option>
+													<option value="01:00 PM">01:00 PM</option>
+													<option value="03:30 PM">03:30 PM</option>
+													<option value="06:00 PM">06:00 PM</option>
+												</select>
+											</div>
+										</div>
+										<div class="flex gap-2 pt-1">
+											<button type="button" id="btn-cancel-sim" class="flex-1 rounded-xl border border-[var(--ks-border)] py-2 text-xs font-bold text-[var(--ks-text-muted)] hover:bg-[var(--ks-surface-soft)] transition">
+												Cancelar
+											</button>
+											<button type="submit" class="flex-1 rounded-xl bg-[var(--ks-primary)] py-2 text-xs font-bold text-white hover:bg-[var(--ks-secondary)] transition shadow-sm">
+												Agregar
+											</button>
+										</div>
+									</form>
+								</div>
 							</div>
 
-							<div class="rounded-2xl bg-[var(--ks-surface)] p-4">
-								<p
-									class="text-sm font-bold text-[var(--ks-text)]"
-								>
-									Consulta inicial
-								</p>
-								<p
-									class="mt-1 text-sm text-[var(--ks-text-muted)]"
-								>
-									04:00 PM · Pendiente
-								</p>
+							<!-- Lista de citas del simulador -->
+							<div id="simulator-appointments-list" class="space-y-2.5 max-h-[260px] overflow-y-auto pr-1">
+								<!-- Se cargará dinámicamente según la industria seleccionada -->
 							</div>
+
+							<!-- Botón de Simular Nueva Cita -->
+							<button id="btn-open-simulator" class="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--ks-primary-muted)] bg-[var(--ks-surface)] py-2.5 text-xs font-bold text-[var(--ks-primary)] hover:bg-[var(--ks-primary-soft)] hover:border-transparent transition-all shadow-sm">
+								<span>+ Simular reserva en vivo</span>
+							</button>
 						</div>
 					</div>
 				</div>
 			</section>
 
+			<!-- Stats Section (Premium style) -->
+			<section class="relative -mt-8 z-20 mx-auto max-w-6xl px-4 md:px-8">
+				<div class="ks-card-shadow rounded-[2rem] border border-[var(--ks-border)] bg-[var(--ks-surface)]/80 backdrop-blur p-8 md:p-10">
+					<div class="grid grid-cols-2 gap-8 md:grid-cols-4 divide-y-0 divide-x-0 sm:divide-y-0 md:divide-x divide-[var(--ks-border)]">
+						{
+							stats.map((stat, idx) => (
+								<div class={`text-center ${idx > 0 ? 'md:pl-4' : ''}`}>
+									<p class="text-4xl font-extrabold tracking-tight text-[var(--ks-primary)] transition-transform hover:scale-105 inline-block cursor-default">
+										{stat.value}
+									</p>
+									<p class="mt-2 text-xs font-bold uppercase tracking-wider text-[var(--ks-text-muted)]">
+										{stat.label}
+									</p>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</section>
+
+			<!-- Beneficios -->
 			<section
 				id="beneficios"
-				class="mx-auto w-full max-w-6xl px-4 pb-20 md:px-8"
+				class="mx-auto w-full max-w-6xl px-4 py-24 md:px-8"
 			>
-				<div class="mb-10 text-center">
+				<div class="mb-16 text-center animate-fade-in-up">
+					<p
+						class="mb-3 inline-flex rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[var(--ks-secondary)]"
+					>
+						¿Por qué Kim Scheduler?
+					</p>
 					<h2
-						class="text-3xl font-bold tracking-tight text-[var(--ks-text)]"
+						class="text-3xl font-bold tracking-tight text-[var(--ks-text)] md:text-5xl"
 					>
 						Diseñado para operar sin complicaciones
 					</h2>
 					<p
-						class="mx-auto mt-3 max-w-2xl text-[var(--ks-text-muted)]"
+						class="mx-auto mt-4 max-w-2xl text-base leading-7 text-[var(--ks-text-muted)]"
 					>
 						Kim Scheduler empieza simple, pero está pensado para
-						convertirse en una plataforma SaaS escalable.
+						convertirse en una plataforma SaaS escalable y veloz.
 					</p>
 				</div>
 
-				<div class="grid gap-5 md:grid-cols-3">
+				<div class="grid gap-8 md:grid-cols-3">
 					{
 						benefits.map((benefit) => (
-							<article class="ks-card-shadow rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-6">
-								<div class="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--ks-surface-soft)] text-lg font-bold text-[var(--ks-primary)]">
-									✓
+							<article class="group ks-card-shadow rounded-[2rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-8 transition-all hover:-translate-y-1.5 hover:border-[var(--ks-primary-muted)] hover:shadow-xl duration-300">
+								<div class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--ks-primary-soft)] transition-colors duration-300 group-hover:bg-[var(--ks-primary)] group-hover:text-white">
+									{benefit.icon === "calendar" && (
+										<svg
+											class="h-6 w-6 text-[var(--ks-primary)] transition-colors duration-300 group-hover:text-white"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											stroke-width="2"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+											/>
+										</svg>
+									)}
+									{benefit.icon === "store" && (
+										<svg
+											class="h-6 w-6 text-[var(--ks-primary)] transition-colors duration-300 group-hover:text-white"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											stroke-width="2"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"
+											/>
+										</svg>
+									)}
+									{benefit.icon === "rocket" && (
+										<svg
+											class="h-6 w-6 text-[var(--ks-primary)] transition-colors duration-300 group-hover:text-white"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											stroke-width="2"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												d="M13 10V3L4 14h7v7l9-11h-7z"
+											/>
+										</svg>
+									)}
 								</div>
 
-								<h3 class="text-xl font-bold text-[var(--ks-text)]">
+								<h3 class="text-2xl font-bold text-[var(--ks-text)]">
 									{benefit.title}
 								</h3>
 
-								<p class="mt-3 leading-7 text-[var(--ks-text-muted)]">
+								<p class="mt-4 text-sm leading-6 text-[var(--ks-text-muted)]">
 									{benefit.description}
 								</p>
 							</article>
@@ -228,17 +426,573 @@ const benefits = [
 					}
 				</div>
 			</section>
+
+			<!-- Cómo funciona -->
+			<section
+				id="como-funciona"
+				class="border-y border-[var(--ks-border)] bg-[var(--ks-surface-soft)]"
+			>
+				<div class="mx-auto w-full max-w-6xl px-4 py-24 md:px-8">
+					<div class="mb-16 text-center">
+						<p
+							class="mb-3 inline-flex rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[var(--ks-secondary)]"
+						>
+							3 pasos simples
+						</p>
+						<h2
+							class="text-3xl font-bold tracking-tight text-[var(--ks-text)] md:text-5xl"
+						>
+							Cómo funciona el flujo
+						</h2>
+						<p
+							class="mx-auto mt-4 max-w-2xl text-base leading-7 text-[var(--ks-text-muted)]"
+						>
+							Empieza a gestionar las citas de tus clientes en minutos. Sin
+							configuraciones complejas.
+						</p>
+					</div>
+
+					<div class="relative grid gap-8 md:grid-cols-3">
+						<!-- Línea de conexión decorativa en desktop -->
+						<div class="absolute left-0 right-0 top-1/2 hidden h-0.5 -translate-y-1/2 border-t-2 border-dashed border-[var(--ks-primary-muted)]/30 z-0 md:block max-w-[75%] mx-auto"></div>
+						
+						{
+							steps.map((step) => (
+								<div class="relative z-10 rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-8 transition-all hover:-translate-y-1 hover:border-[var(--ks-primary-muted)] hover:shadow-lg duration-300">
+									<div class="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--ks-primary-soft)] text-2xl font-black text-[var(--ks-primary)]">
+										{step.number}
+									</div>
+
+									<h3 class="text-xl font-bold text-[var(--ks-text)]">
+										{step.title}
+									</h3>
+
+									<p class="mt-3 text-sm leading-6 text-[var(--ks-text-muted)]">
+										{step.description}
+									</p>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</section>
+
+			<!-- Preguntas Frecuentes (FAQ) Section -->
+			<section class="mx-auto w-full max-w-4xl px-4 py-24 md:px-8">
+				<div class="mb-16 text-center">
+					<p
+						class="mb-3 inline-flex rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-[var(--ks-secondary)]"
+					>
+						Preguntas Frecuentes
+					</p>
+					<h2
+						class="text-3xl font-bold tracking-tight text-[var(--ks-text)] md:text-5xl"
+					>
+						Resolvemos tus dudas
+					</h2>
+					<p
+						class="mx-auto mt-4 max-w-xl text-sm leading-6 text-[var(--ks-text-muted)]"
+					>
+						Todo lo que necesitas saber sobre el funcionamiento de la agenda y la configuración del sistema.
+					</p>
+				</div>
+
+				<div class="space-y-4">
+					<div class="faq-item border border-[var(--ks-border)] bg-[var(--ks-surface)] rounded-2xl p-5 cursor-pointer transition-all hover:border-[var(--ks-primary-muted)]">
+						<div class="flex items-center justify-between">
+							<h4 class="font-bold text-[var(--ks-text)] pr-4 text-sm md:text-base">¿Kim Scheduler es gratuito?</h4>
+							<span class="faq-icon text-[var(--ks-primary)] transition duration-300 font-bold text-lg">+</span>
+						</div>
+						<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+							<p class="pt-3 text-xs md:text-sm text-[var(--ks-text-muted)] leading-relaxed">
+								Sí, actualmente el proyecto es de código abierto y completamente gratuito para fines de desarrollo y auto-hospedaje. Cualquiera puede descargarlo y correrlo localmente.
+							</p>
+						</div>
+					</div>
+
+					<div class="faq-item border border-[var(--ks-border)] bg-[var(--ks-surface)] rounded-2xl p-5 cursor-pointer transition-all hover:border-[var(--ks-primary-muted)]">
+						<div class="flex items-center justify-between">
+							<h4 class="font-bold text-[var(--ks-text)] pr-4 text-sm md:text-base">¿Puedo personalizar los horarios de mi negocio?</h4>
+							<span class="faq-icon text-[var(--ks-primary)] transition duration-300 font-bold text-lg">+</span>
+						</div>
+						<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+							<p class="pt-3 text-xs md:text-sm text-[var(--ks-text-muted)] leading-relaxed">
+								Totalmente. El sistema permite configurar los días laborales de la semana, junto con las horas de apertura y de cierre de cada día de forma independiente, así como desactivar días completos.
+							</p>
+						</div>
+					</div>
+
+					<div class="faq-item border border-[var(--ks-border)] bg-[var(--ks-surface)] rounded-2xl p-5 cursor-pointer transition-all hover:border-[var(--ks-primary-muted)]">
+						<div class="flex items-center justify-between">
+							<h4 class="font-bold text-[var(--ks-text)] pr-4 text-sm md:text-base">¿Cómo se maneja la seguridad de mis datos?</h4>
+							<span class="faq-icon text-[var(--ks-primary)] transition duration-300 font-bold text-lg">+</span>
+						</div>
+						<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+							<p class="pt-3 text-xs md:text-sm text-[var(--ks-text-muted)] leading-relaxed">
+								El sistema utiliza JSON Web Tokens (JWT) firmados de manera segura para manejar las sesiones de usuario. Las contraseñas de la base de datos se cifran utilizando un algoritmo de hashing moderno de nivel bancario en el backend ASP.NET Core.
+							</p>
+						</div>
+					</div>
+
+					<div class="faq-item border border-[var(--ks-border)] bg-[var(--ks-surface)] rounded-2xl p-5 cursor-pointer transition-all hover:border-[var(--ks-primary-muted)]">
+						<div class="flex items-center justify-between">
+							<h4 class="font-bold text-[var(--ks-text)] pr-4 text-sm md:text-base">¿Soporta múltiples servicios con diferentes duraciones?</h4>
+							<span class="faq-icon text-[var(--ks-primary)] transition duration-300 font-bold text-lg">+</span>
+						</div>
+						<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+							<p class="pt-3 text-xs md:text-sm text-[var(--ks-text-muted)] leading-relaxed">
+								Sí. Cada servicio creado se asocia a tu negocio con su propio nombre, descripción, precio y duración en minutos. De este modo, la agenda calcula con precisión el fin de las citas sin solaparse.
+							</p>
+						</div>
+					</div>
+
+					<div class="faq-item border border-[var(--ks-border)] bg-[var(--ks-surface)] rounded-2xl p-5 cursor-pointer transition-all hover:border-[var(--ks-primary-muted)]">
+						<div class="flex items-center justify-between">
+							<h4 class="font-bold text-[var(--ks-text)] pr-4 text-sm md:text-base">¿Qué integraciones están planeadas para el futuro?</h4>
+							<span class="faq-icon text-[var(--ks-primary)] transition duration-300 font-bold text-lg">+</span>
+						</div>
+						<div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+							<p class="pt-3 text-xs md:text-sm text-[var(--ks-text-muted)] leading-relaxed">
+								Tenemos planeado agregar recordatorios automatizados de citas, integraciones con canales de mensajería como Telegram y WhatsApp, y un asistente de Inteligencia Artificial para reservar rápido.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- CTA Final -->
+			<section class="mx-auto w-full max-w-6xl px-4 py-20 md:px-8 animate-fade-in-up">
+				<div
+					class="ks-card-shadow relative overflow-hidden rounded-[2.5rem] border border-[var(--ks-border)] bg-[var(--ks-primary)] p-10 text-center md:p-16"
+				>
+					<!-- Decoración interna del CTA -->
+					<div
+						class="pointer-events-none absolute -left-20 -top-20 h-60 w-60 rounded-full bg-white/5 blur-3xl"
+					>
+					</div>
+					<div
+						class="pointer-events-none absolute -bottom-20 -right-20 h-60 w-60 rounded-full bg-white/10 blur-3xl"
+					>
+					</div>
+
+					<h2
+						class="relative text-3xl font-black tracking-tight text-white md:text-4xl"
+					>
+						¿Listo para organizar tu negocio?
+					</h2>
+					<p
+						class="relative mx-auto mt-4 max-w-xl text-sm leading-7 text-white/80"
+					>
+						Crea tu cuenta gratis y empieza a gestionar citas,
+						servicios y horarios desde hoy.
+					</p>
+
+					<div
+						class="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+					>
+						<a
+							href="/register"
+							class="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-bold text-[var(--ks-primary)] transition hover:bg-[var(--ks-surface-soft)] hover:shadow-lg"
+						>
+							Crear cuenta gratis
+							<span class="text-base">→</span>
+						</a>
+
+						<a
+							href="/login"
+							class="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/10"
+						>
+							Ya tengo cuenta
+						</a>
+					</div>
+				</div>
+			</section>
 		</main>
 
 		<footer
-			class="border-t border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-8 md:px-8"
+			class="border-t border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-12 md:px-8"
 		>
 			<div
-				class="mx-auto flex w-full max-w-6xl flex-col gap-3 text-sm text-[var(--ks-text-muted)] md:flex-row md:items-center md:justify-between"
+				class="mx-auto flex w-full max-w-6xl flex-col gap-8 md:flex-row md:items-start md:justify-between"
 			>
-				<p>© 2026 Kim Scheduler.</p>
-				<p>Proyecto open source en desarrollo.</p>
+				<div>
+					<p
+						class="text-lg font-bold tracking-tight text-[var(--ks-primary)] flex items-center gap-2"
+					>
+						<span class="inline-block h-5 w-5 rounded bg-[var(--ks-primary)] text-white text-center leading-5 font-black text-xs">K</span>
+						Kim Scheduler
+					</p>
+					<p
+						class="mt-3 max-w-xs text-sm leading-6 text-[var(--ks-text-muted)]"
+					>
+						SaaS de gestión de citas para pequeños negocios locales.
+						Proyecto open source en desarrollo.
+					</p>
+				</div>
+
+				<div class="flex gap-16">
+					<div>
+						<p
+							class="mb-4 text-xs font-bold uppercase tracking-wider text-[var(--ks-text)]"
+						>
+							Producto
+						</p>
+						<div
+							class="flex flex-col gap-2 text-sm text-[var(--ks-text-muted)]"
+						>
+							<a
+								href="#beneficios"
+								class="transition hover:text-[var(--ks-primary)]"
+								>Beneficios</a
+							>
+							<a
+								href="#como-funciona"
+								class="transition hover:text-[var(--ks-primary)]"
+								>Cómo funciona</a
+							>
+						</div>
+					</div>
+
+					<div>
+						<p
+							class="mb-4 text-xs font-bold uppercase tracking-wider text-[var(--ks-text)]"
+						>
+							Cuenta
+						</p>
+						<div
+							class="flex flex-col gap-2 text-sm text-[var(--ks-text-muted)]"
+						>
+							<a
+								href="/register"
+								class="transition hover:text-[var(--ks-primary)]"
+								>Crear cuenta</a
+							>
+							<a
+								href="/login"
+								class="transition hover:text-[var(--ks-primary)]"
+								>Iniciar sesión</a
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="mx-auto mt-8 flex w-full max-w-6xl border-t border-[var(--ks-border)] pt-6"
+			>
+				<p class="text-xs text-[var(--ks-text-muted)]">
+					© 2026 Kim Scheduler. Proyecto open source en desarrollo.
+				</p>
 			</div>
 		</footer>
+
+		<script>
+			// Datos de simulación por industria
+			const industriesData = {
+				barber: {
+					name: "Barbería Nova",
+					appointments: [
+						{ id: "b1", title: "Corte clásico", customer: "Martín P.", time: "10:00 AM", status: "Pendiente", badgeClass: "bg-[var(--ks-surface-soft)] text-[var(--ks-text-muted)]" },
+						{ id: "b2", title: "Corte + barba", customer: "Jorge S.", time: "12:30 PM", status: "Confirmada", badgeClass: "bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold" },
+						{ id: "b3", title: "Afeitado premium", customer: "Luis A.", time: "03:00 PM", status: "Confirmada", badgeClass: "bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold" }
+					],
+					services: [
+						"Corte clásico",
+						"Corte + barba",
+						"Afeitado premium",
+						"Tinte capilar"
+					]
+				},
+				spa: {
+					name: "Estética Glam",
+					appointments: [
+						{ id: "s1", title: "Manicura Spa", customer: "Sofia V.", time: "09:00 AM", status: "Confirmada", badgeClass: "bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold" },
+						{ id: "s2", title: "Corte de dama", customer: "Elena R.", time: "11:15 AM", status: "Pendiente", badgeClass: "bg-[var(--ks-surface-soft)] text-[var(--ks-text-muted)]" },
+						{ id: "s3", title: "Tinte + Peinado", customer: "Ana G.", time: "02:00 PM", status: "Confirmada", badgeClass: "bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold" }
+					],
+					services: [
+						"Manicura Spa",
+						"Corte de dama",
+						"Tinte + Peinado",
+						"Pedicura"
+					]
+				},
+				dental: {
+					name: "Consultorio Dental",
+					appointments: [
+						{ id: "d1", title: "Limpieza Dental", customer: "Daniel M.", time: "08:30 AM", status: "Confirmada", badgeClass: "bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold" },
+						{ id: "d2", title: "Consulta Diagnóstico", customer: "Marcela F.", time: "10:30 AM", status: "Pendiente", badgeClass: "bg-[var(--ks-surface-soft)] text-[var(--ks-text-muted)]" },
+						{ id: "d3", title: "Ortodoncia Control", customer: "Roberto G.", time: "04:30 PM", status: "Confirmada", badgeClass: "bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold" }
+					],
+					services: [
+						"Limpieza Dental",
+						"Consulta Diagnóstico",
+						"Ortodoncia Control",
+						"Blanqueamiento"
+					]
+				}
+			};
+
+			let currentIndustry = 'barber';
+			const localAppointments = JSON.parse(JSON.stringify(industriesData)); // copia profunda
+
+			// Referencias de elementos del simulador
+			const businessNameEl = document.getElementById('simulator-business-name');
+			const citasCountEl = document.getElementById('simulator-citas-count');
+			const appointmentsListEl = document.getElementById('simulator-appointments-list');
+			const simulatorFormContainer = document.getElementById('booking-simulator');
+			const simulatorForm = document.getElementById('simulator-form') as HTMLFormElement | null;
+			const simCustomerNameInput = document.getElementById('sim-customer-name') as HTMLInputElement | null;
+			const simServiceSelect = document.getElementById('sim-service') as HTMLSelectElement | null;
+			const simTimeSelect = document.getElementById('sim-time') as HTMLSelectElement | null;
+			
+			const btnOpenSim = document.getElementById('btn-open-simulator');
+			const btnCancelSim = document.getElementById('btn-cancel-sim');
+
+			// Botones de industria
+			const btnBarber = document.getElementById('industry-barber');
+			const btnSpa = document.getElementById('industry-spa');
+			const btnDental = document.getElementById('industry-dental');
+
+			function renderSimulator() {
+				const data = localAppointments[currentIndustry];
+				
+				// Renderizar nombre e info
+				if (businessNameEl) businessNameEl.textContent = data.name;
+				
+				const count = data.appointments.length;
+				if (citasCountEl) citasCountEl.textContent = `${count} ${count === 1 ? 'cita' : 'citas'} hoy`;
+
+				// Renderizar citas
+				if (appointmentsListEl) {
+					appointmentsListEl.innerHTML = '';
+					if (data.appointments.length === 0) {
+						appointmentsListEl.innerHTML = `<div class="text-center py-6 text-xs text-[var(--ks-text-muted)]">Sin citas programadas</div>`;
+					} else {
+						data.appointments.forEach((app: any) => {
+							const item = document.createElement('div');
+							item.className = 'rounded-xl bg-[var(--ks-surface)] p-3 border border-[var(--ks-border)] transition-all hover:shadow-sm flex items-center justify-between fade-in-scale';
+							item.innerHTML = `
+								<div>
+									<p class="text-xs font-bold text-[var(--ks-text)]">${app.title}</p>
+									<p class="text-[10px] text-[var(--ks-text-muted)] mt-0.5">${app.time} · Cliente: ${app.customer}</p>
+								</div>
+								<span class="rounded-full px-2 py-0.5 text-[10px] ${app.badgeClass}">
+									${app.status}
+								</span>
+							`;
+							appointmentsListEl.appendChild(item);
+						});
+					}
+				}
+
+				// Rellenar servicios del selector
+				if (simServiceSelect) {
+					simServiceSelect.innerHTML = '';
+					data.services.forEach((srv: string) => {
+						const opt = document.createElement('option');
+						opt.value = srv;
+						opt.textContent = srv;
+						simServiceSelect.appendChild(opt);
+					});
+				}
+			}
+
+			function switchIndustry(industryId: string, activeBtn: HTMLElement | null) {
+				currentIndustry = industryId;
+				
+				// Resetear estilos de botones
+				document.querySelectorAll('.industry-btn').forEach(btn => {
+					btn.className = 'industry-btn flex-1 rounded-lg py-1.5 text-xs font-bold transition-all text-[var(--ks-text-muted)] hover:text-[var(--ks-text)]';
+				});
+
+				// Activar el actual
+				if (activeBtn) {
+					activeBtn.className = 'industry-btn flex-1 rounded-lg py-1.5 text-xs font-bold transition-all bg-[var(--ks-surface)] text-[var(--ks-primary)] shadow-sm';
+				}
+
+				// Cerrar simulador por si estuviera abierto
+				closeSimulatorForm();
+				
+				renderSimulator();
+			}
+
+			function openSimulatorForm() {
+				if (simulatorFormContainer) {
+					simulatorFormContainer.classList.remove('max-h-0', 'opacity-0');
+					simulatorFormContainer.classList.add('max-h-[300px]', 'opacity-100');
+					if (simCustomerNameInput) simCustomerNameInput.focus();
+				}
+			}
+
+			function closeSimulatorForm() {
+				if (simulatorFormContainer) {
+					simulatorFormContainer.classList.add('max-h-0', 'opacity-0');
+					simulatorFormContainer.classList.remove('max-h-[300px]', 'opacity-100');
+					if (simulatorForm) simulatorForm.reset();
+				}
+			}
+
+			// Configurar eventos
+			btnBarber?.addEventListener('click', () => switchIndustry('barber', btnBarber));
+			btnSpa?.addEventListener('click', () => switchIndustry('spa', btnSpa));
+			btnDental?.addEventListener('click', () => switchIndustry('dental', btnDental));
+
+			btnOpenSim?.addEventListener('click', () => {
+				if (simulatorFormContainer?.classList.contains('opacity-100')) {
+					closeSimulatorForm();
+				} else {
+					openSimulatorForm();
+				}
+			});
+
+			btnCancelSim?.addEventListener('click', closeSimulatorForm);
+
+			simulatorForm?.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const name = simCustomerNameInput?.value || 'Anónimo';
+				const service = simServiceSelect?.value || 'Servicio';
+				const time = simTimeSelect?.value || '12:00 PM';
+
+				// Añadir nueva cita al inicio
+				localAppointments[currentIndustry].appointments.unshift({
+					id: 'sim-' + Date.now(),
+					title: service,
+					customer: name,
+					time: time,
+					status: 'Confirmada',
+					badgeClass: 'bg-[var(--ks-primary-soft)] text-[var(--ks-primary)] font-bold'
+				});
+
+				closeSimulatorForm();
+				renderSimulator();
+
+				// Resaltar primer elemento recién agregado
+				const firstItem = appointmentsListEl?.firstElementChild;
+				if (firstItem) {
+					firstItem.classList.add('pulse-new-item');
+					setTimeout(() => firstItem.classList.remove('pulse-new-item'), 2000);
+				}
+			});
+
+			// FAQ Accordion
+			const faqItems = document.querySelectorAll('.faq-item');
+			faqItems.forEach(item => {
+				item.addEventListener('click', () => {
+					const content = item.querySelector('.faq-content') as HTMLElement | null;
+					const icon = item.querySelector('.faq-icon');
+					const isOpen = content?.classList.contains('open');
+
+					// Cerrar otros
+					document.querySelectorAll('.faq-content').forEach(c => {
+						const htmlC = c as HTMLElement;
+						htmlC.classList.remove('open');
+						htmlC.style.maxHeight = "";
+					});
+					document.querySelectorAll('.faq-icon').forEach(i => {
+						i.classList.remove('open');
+						i.textContent = '+';
+					});
+
+					// Abrir el actual si no estaba abierto
+					if (!isOpen && content && icon) {
+						content.classList.add('open');
+						content.style.maxHeight = content.scrollHeight + 'px';
+						icon.classList.add('open');
+						icon.textContent = '−';
+					}
+				});
+			});
+
+			// Cargar estado inicial
+			renderSimulator();
+		</script>
 	</body>
 </html>
+
+<style>
+	/* Patrón de cuadrícula de puntos */
+	.dot-grid-pattern {
+		background-image: radial-gradient(var(--ks-primary-muted) 1.2px, transparent 1.2px);
+		background-size: 20px 20px;
+		opacity: 0.08;
+	}
+
+	/* Animaciones de entrada */
+	@keyframes fade-in-up {
+		from {
+			opacity: 0;
+			transform: translateY(24px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes float-slow {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-30px);
+		}
+	}
+
+	@keyframes float-reverse {
+		0%,
+		100% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(30px);
+		}
+	}
+
+	.animate-fade-in-up {
+		animation: fade-in-up 0.7s ease-out both;
+	}
+
+	.animate-fade-in-up-delayed {
+		animation: fade-in-up 0.7s ease-out 0.2s both;
+	}
+
+	.animate-float-slow {
+		animation: float-slow 8s ease-in-out infinite;
+	}
+
+	.animate-float-reverse {
+		animation: float-reverse 10s ease-in-out infinite;
+	}
+
+	@keyframes fadeInScale {
+		from {
+			opacity: 0;
+			transform: scale(0.95);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	.fade-in-scale {
+		animation: fadeInScale 0.25s ease-out forwards;
+	}
+
+	@keyframes pulseNewItem {
+		0% {
+			background-color: var(--ks-primary-soft);
+			border-color: var(--ks-primary);
+		}
+		100% {
+			background-color: var(--ks-surface);
+			border-color: var(--ks-border);
+		}
+	}
+
+	.pulse-new-item {
+		animation: pulseNewItem 2s ease-out forwards;
+	}
+</style>

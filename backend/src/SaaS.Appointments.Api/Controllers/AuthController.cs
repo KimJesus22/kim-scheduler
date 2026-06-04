@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SaaS.Appointments.Api.Auth;
 using SaaS.Appointments.Api.Contracts.Auth;
 using SaaS.Appointments.Domain.Entities;
 using SaaS.Appointments.Infrastructure.Persistence;
@@ -12,10 +13,17 @@ namespace SaaS.Appointments.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AppDbContext _dbContext;
+    private readonly JwtTokenService _jwtTokenService;
 
-    public AuthController(AppDbContext dbContext)
+    public AuthController(
+        AppDbContext dbContext,
+        JwtTokenService jwtTokenService)
     {
+        // AppDbContext permite consultar usuarios en MariaDB.
         _dbContext = dbContext;
+
+        // JwtTokenService genera el token cuando el login es correcto.
+        _jwtTokenService = jwtTokenService;
     }
 
     [HttpPost("register")]
@@ -173,13 +181,21 @@ public class AuthController : ControllerBase
             });
         }
 
+        // Si llegamos aquí, el email existe, la cuenta está activa
+        // y la contraseña coincide con el hash guardado.
+        var token = _jwtTokenService.GenerateToken(user);
+
         var response = new LoginResponse
         {
             Id = user.Id,
             FullName = user.FullName,
             Email = user.Email,
             Role = user.Role,
-            IsActive = user.IsActive
+            IsActive = user.IsActive,
+
+            // Enviamos el JWT al frontend para que pueda autenticarse
+            // en futuras peticiones protegidas.
+            Token = token
         };
 
         return Ok(response);

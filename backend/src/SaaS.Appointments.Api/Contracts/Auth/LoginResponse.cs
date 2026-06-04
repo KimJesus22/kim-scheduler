@@ -2,8 +2,8 @@ using SaaS.Appointments.Domain.Entities;
 
 namespace SaaS.Appointments.Api.Contracts.Auth;
 
-// Respuesta temporal del login.
-// Más adelante aquí agregaremos el JWT.
+// Respuesta que recibe el frontend cuando el login es correcto.
+// Incluye datos básicos del usuario y el JWT para futuras peticiones protegidas.
 public class LoginResponse
 {
     public Guid Id { get; set; }
@@ -16,6 +16,8 @@ public class LoginResponse
 
     public bool IsActive { get; set; }
 
-    // TODO: En el siguiente bloque agregaremos:
-    // public string Token { get; set; } = string.Empty;
+    // Token JWT generado por el backend.
+    // El frontend lo usará después en el header:
+    // Authorization: Bearer {token}
+    public string Token { get; set; } = string.Empty;
 }
