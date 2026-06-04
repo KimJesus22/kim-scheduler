@@ -88,6 +88,23 @@ const apiUrl = "http://localhost:5083";
                     </button>
                 </article>
 
+                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
+                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Autenticación</p>
+
+                  <h2 class="mt-2 text-xl font-bold">Ver sesión actual</h2>
+
+                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+                    Consulta el endpoint protegido GET /api/auth/me usando el JWT guardado.
+                  </p>
+
+                  <button
+                    id="getCurrentUserButton"
+                    class="mt-5 w-full rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+                  >
+                    Ver sesión
+                  </button>
+                </article>
+
                 <article
                     class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
                 >
@@ -194,6 +211,84 @@ const apiUrl = "http://localhost:5083";
                       type="submit"
                     >
                       Crear negocio
+                    </button>
+                  </form>
+                </article>
+
+                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
+                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Servicios</p>
+
+                  <h2 class="mt-2 text-xl font-bold">Crear servicio</h2>
+
+                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+                    Crea un servicio asociado a un negocio usando POST /api/services. Requiere Admin.
+                  </p>
+
+                  <form id="createServiceForm" class="mt-5 flex flex-col gap-3">
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Negocio
+                      <select
+                        id="serviceBusinessIdInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        required
+                      >
+                        <option value="">Cargando negocios...</option>
+                      </select>
+                    </label>
+
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Nombre del servicio
+                      <input
+                        id="serviceNameInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        type="text"
+                        placeholder="Corte de cabello"
+                        required
+                      />
+                    </label>
+
+                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                      Descripción
+                      <input
+                        id="serviceDescriptionInput"
+                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                        type="text"
+                        placeholder="Corte clásico con tijera y máquina"
+                      />
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-3">
+                      <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                        Duración (min)
+                        <input
+                          id="serviceDurationInput"
+                          class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                          type="number"
+                          min="1"
+                          placeholder="30"
+                          required
+                        />
+                      </label>
+
+                      <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
+                        Precio ($)
+                        <input
+                          id="servicePriceInput"
+                          class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                          type="number"
+                          step="0.01"
+                          min="0"
+                          placeholder="15.00"
+                          required
+                        />
+                      </label>
+                    </div>
+
+                    <button
+                      class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+                      type="submit"
+                    >
+                      Crear servicio
                     </button>
                   </form>
                 </article>
@@ -308,6 +403,11 @@ const apiUrl = "http://localhost:5083";
             const clearResultButton =
                 document.querySelector<HTMLButtonElement>("#clearResultButton");
 
+            // Botón para probar si el JWT guardado permite consultar /api/auth/me.
+            const getCurrentUserButton = document.querySelector<HTMLButtonElement>(
+              "#getCurrentUserButton"
+            );
+
             // Botón para cerrar sesión desde el playground.
             const logoutButton = document.querySelector<HTMLButtonElement>("#logoutButton");
 
@@ -348,6 +448,30 @@ const apiUrl = "http://localhost:5083";
                 "#businessEmailInput"
             );
 
+            const createServiceForm = document.querySelector<HTMLFormElement>(
+                "#createServiceForm"
+            );
+
+            const serviceBusinessIdInput = document.querySelector<HTMLSelectElement>(
+                "#serviceBusinessIdInput"
+            );
+
+            const serviceNameInput = document.querySelector<HTMLInputElement>(
+                "#serviceNameInput"
+            );
+
+            const serviceDescriptionInput = document.querySelector<HTMLInputElement>(
+                "#serviceDescriptionInput"
+            );
+
+            const serviceDurationInput = document.querySelector<HTMLInputElement>(
+                "#serviceDurationInput"
+            );
+
+            const servicePriceInput = document.querySelector<HTMLInputElement>(
+                "#servicePriceInput"
+            );
+
             type ApiResult = {
                 statusCode: number;
                 ok: boolean;
@@ -377,6 +501,16 @@ const apiUrl = "http://localhost:5083";
             // para cada negocio de la base de datos mapeando los objetos JS a strings utilizando Template Literals.
             function renderBusinesses(businesses: Business[]): void {
                 if (!businessesList) return;
+
+                if (serviceBusinessIdInput) {
+                    if (businesses.length === 0) {
+                        serviceBusinessIdInput.innerHTML = '<option value="">No hay negocios activos</option>';
+                    } else {
+                        serviceBusinessIdInput.innerHTML = businesses
+                            .map(b => `<option value="${b.id}">${b.name} (${b.id.substring(0, 8)})</option>`)
+                            .join("");
+                    }
+                }
 
                 if (businesses.length === 0) {
                     businessesList.innerHTML = `
@@ -641,6 +775,62 @@ const apiUrl = "http://localhost:5083";
                 }
             });
 
+            createServiceForm?.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                if (!serviceBusinessIdInput || !serviceNameInput || !serviceDurationInput || !servicePriceInput) {
+                    showResult({
+                        ok: false,
+                        message: "No se encontraron los campos obligatorios del formulario de servicios.",
+                    });
+                    return;
+                }
+
+                const businessId = serviceBusinessIdInput.value;
+                if (!businessId) {
+                    showResult({
+                        ok: false,
+                        message: "Por favor selecciona un negocio.",
+                    });
+                    return;
+                }
+
+                const payload = {
+                    businessId: businessId,
+                    name: serviceNameInput.value.trim(),
+                    description: serviceDescriptionInput?.value.trim() || null,
+                    durationMinutes: parseInt(serviceDurationInput.value, 10),
+                    price: parseFloat(servicePriceInput.value),
+                };
+
+                if (!getAuthToken()) {
+                    showResult({
+                        ok: false,
+                        message: "Necesitas iniciar sesión antes de crear servicios.",
+                    });
+                    return;
+                }
+
+                try {
+                    const result = await requestJson(`${apiUrl}/api/services`, {
+                        method: "POST",
+                        headers: getAuthHeaders(),
+                        body: JSON.stringify(payload),
+                    });
+
+                    showResult(result);
+
+                    if (result.ok) {
+                        createServiceForm.reset();
+                    }
+                } catch {
+                    showResult({
+                        ok: false,
+                        message: "No se pudo crear el servicio. Revisa que el backend esté corriendo.",
+                    });
+                }
+            });
+
             // TODO: Estos dos manejadores usan IDs fijos con fines estrictos de testeo y pruebas manuales del backend.
             // Se dinamizarán o removerán en fases posteriores de desarrollo.
             deactivateBadBusinessButton?.addEventListener("click", async () => {
@@ -685,6 +875,24 @@ const apiUrl = "http://localhost:5083";
                 resultBox.textContent = "Sin respuesta todavía.";
             });
 
+            getCurrentUserButton?.addEventListener("click", async () => {
+              try {
+                // Este endpoint está protegido con [Authorize].
+                // Por eso mandamos Authorization: Bearer {token}.
+                const result = await requestJson(`${apiUrl}/api/auth/me`, {
+                  method: "GET",
+                  headers: getAuthHeaders(),
+                });
+
+                showResult(result);
+              } catch {
+                showResult({
+                  ok: false,
+                  message: "No se pudo obtener la sesión actual.",
+                });
+              }
+            });
+
             logoutButton?.addEventListener("click", () => {
                 // Eliminamos el token y los datos básicos del usuario.
                 // Sin token, el usuario ya no puede entrar al playground ni usar endpoints protegidos.
@@ -694,6 +902,21 @@ const apiUrl = "http://localhost:5083";
                 // Redirigimos al login para que pueda volver a autenticarse.
                 window.location.href = "/login";
             });
+
+            // Cargar negocios e iniciar selectores al abrir la página
+            async function loadBusinesses(): Promise<void> {
+                try {
+                    const result = await requestJson(`${apiUrl}/api/businesses`);
+                    if (Array.isArray(result.data)) {
+                        renderBusinesses(result.data as Business[]);
+                        bindDeactivateBusinessButtons();
+                    }
+                } catch (err) {
+                    console.error("Error al cargar negocios:", err);
+                }
+            }
+
+            loadBusinesses();
         </script>
     </body>
 </html>

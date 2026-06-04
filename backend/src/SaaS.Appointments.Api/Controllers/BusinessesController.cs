@@ -26,10 +26,9 @@ public class BusinessesController : ControllerBase
 
     // POST /api/businesses (Crear Negocio):
     // Endpoint RESTful encargado del registro y persistencia de un nuevo negocio local.
-    // Solo usuarios autenticados podrán crear negocios.
-    // Más adelante podemos limitarlo a Admin con:
-    // [Authorize(Roles = "Admin")]
-    [Authorize]
+    // Solo usuarios con rol Admin pueden crear negocios.
+    // El rol se valida contra el claim ClaimTypes.Role dentro del JWT.
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateBusiness(CreateBusinessRequest request)
     {
@@ -179,7 +178,9 @@ public class BusinessesController : ControllerBase
     }
 
     // PATCH /api/businesses/{id}/deactivate (Inactivación Lógica de Negocio):
-    // Endpoint para realizar soft delete de un comercio local.
+    // Solo Admin puede desactivar negocios.
+    // Esto evita que un usuario Staff pueda ocultar negocios por accidente o abuso.
+    [Authorize(Roles = "Admin")]
     [HttpPatch("{id:guid}/deactivate")]
     public async Task<IActionResult> DeactivateBusiness(Guid id)
     {

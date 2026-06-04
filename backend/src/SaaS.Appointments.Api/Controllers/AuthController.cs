@@ -5,6 +5,8 @@ using SaaS.Appointments.Api.Auth;
 using SaaS.Appointments.Api.Contracts.Auth;
 using SaaS.Appointments.Domain.Entities;
 using SaaS.Appointments.Infrastructure.Persistence;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SaaS.Appointments.Api.Controllers;
 
@@ -199,5 +201,37 @@ public class AuthController : ControllerBase
         };
 
         return Ok(response);
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public IActionResult Me()
+    {
+        // Cuando el frontend manda:
+        // Authorization: Bearer {token}
+        // ASP.NET Core valida el JWT y llena la propiedad User con los claims del token.
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        var fullName = User.FindFirstValue(ClaimTypes.Name);
+        var role = User.FindFirstValue(ClaimTypes.Role);
+
+        // Si el token es válido, estos datos deberían existir.
+        // Si no existieran, significa que el token no tiene los claims esperados.
+        if (userId is null || email is null || fullName is null || role is null)
+        {
+            return Unauthorized(new
+            {
+                message = "Token inválido o incompleto."
+            });
+        }
+
+        return Ok(new
+        {
+            id = userId,
+            fullName,
+            email,
+            role
+        });
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SaaS.Appointments.Api.Contracts.Services;
 using SaaS.Appointments.Domain.Entities;
 using SaaS.Appointments.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SaaS.Appointments.Api.Controllers;
 
@@ -18,6 +19,9 @@ public class ServicesController : ControllerBase
     }
 
     // POST /api/services: Crea un nuevo servicio (ej. "Corte", "Coloración") asociado a un negocio.
+    // Solo usuarios Admin pueden crear servicios.
+    // Los clientes podrán ver servicios, pero no administrarlos.
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateService(CreateServiceRequest request)
     {
