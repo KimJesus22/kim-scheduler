@@ -1,9 +1,6 @@
 ---
 import "../styles/global.css";
-
-// URL local de la API.
-// Después la moveremos a una variable de entorno para producción.
-const apiUrl = "http://localhost:5083";
+import { apiUrl } from "../lib/api";
 ---
 
 <html lang="es">
@@ -131,7 +128,8 @@ const apiUrl = "http://localhost:5083";
         </main>
 
         <script>
-            const apiUrl = "http://localhost:5083";
+            import { apiUrl } from "../lib/api";
+            import { saveAuthSession } from "../lib/auth";
 
             // Referencias tipadas al formulario y campos.
             // Así TypeScript sabe que .value existe en los inputs.
@@ -244,23 +242,13 @@ const apiUrl = "http://localhost:5083";
 
                     const loggedUser = data as LoginResponse;
 
-                    // Guardamos el JWT en localStorage para poder usarlo después
-                    // en peticiones protegidas con Authorization: Bearer {token}.
-                    // Nota: para producción real revisaremos opciones más seguras,
-                    // pero para este MVP local nos sirve para aprender el flujo.
-                    localStorage.setItem("kim_scheduler_token", loggedUser.token);
-
-                    // Guardamos también datos básicos no sensibles del usuario.
-                    // Esto ayuda a mostrar nombre/rol en el frontend sin pedirlo otra vez al backend.
-                    localStorage.setItem(
-                        "kim_scheduler_user",
-                        JSON.stringify({
-                            id: loggedUser.id,
-                            fullName: loggedUser.fullName,
-                            email: loggedUser.email,
-                            role: loggedUser.role,
-                        })
-                    );
+                    // Guardamos el JWT y datos básicos del usuario en localStorage usando el helper centralizado.
+                    saveAuthSession(loggedUser.token, {
+                        id: loggedUser.id,
+                        fullName: loggedUser.fullName,
+                        email: loggedUser.email,
+                        role: loggedUser.role,
+                    });
 
                     showFormMessage(
                         `Bienvenido, ${loggedUser.fullName}. Token guardado correctamente.`,

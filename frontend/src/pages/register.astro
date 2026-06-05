@@ -1,9 +1,6 @@
 ---
 import "../styles/global.css";
-
-// URL local de la API.
-// Más adelante la moveremos a variable de entorno para Vercel/producción.
-const apiUrl = "http://localhost:5083";
+import { apiUrl } from "../lib/api";
 ---
 
 <html lang="es">
@@ -187,7 +184,7 @@ const apiUrl = "http://localhost:5083";
         </main>
 
         <script>
-            const apiUrl = "http://localhost:5083";
+            import { apiUrl } from "../lib/api";
 
             // Referencias tipadas a elementos del formulario.
             // Esto ayuda a TypeScript a saber que estos elementos tienen propiedades como .value.

@@ -3,8 +3,7 @@
 // Este bloque --- se ejecuta estrictamente en el servidor en cada render.
 // Aquí definimos HTML estático y enviamos variables iniciales.
 import "../styles/global.css";
-
-const apiUrl = "http://localhost:5083";
+import { apiUrl } from "../lib/api";
 ---
 
 <html lang="es">
@@ -493,8 +492,8 @@ const apiUrl = "http://localhost:5083";
         getAuthToken,
         isAuthenticated,
       } from "../lib/auth";
-
-      const apiUrl = "http://localhost:5083";
+      import { apiUrl, requestJson } from "../lib/api";
+      import type { ApiResult } from "../lib/api";
 
       // /playground es una herramienta interna.
       // Si no hay sesión local, mandamos al usuario a login.
@@ -608,13 +607,7 @@ const apiUrl = "http://localhost:5083";
         "#getBusinessHoursButton",
       );
 
-      type ApiResult = {
-        statusCode: number;
-        ok: boolean;
-        data: unknown; // unknown vs any: 'unknown' es la alternativa segura a 'any' en TypeScript.
-        // Obliga al desarrollador a comprobar el tipo de dato (por ej. con Array.isArray)
-        // antes de acceder a sus propiedades, previniendo excepciones en tiempo de ejecución.
-      };
+
 
       type Business = {
         id: string;
@@ -757,23 +750,7 @@ const apiUrl = "http://localhost:5083";
         });
       }
 
-      // API FETCH WRAPPER (requestJson):
-      // Abstracción reutilizable del fetch nativo.
-      // Simplifica las llamadas asíncronas encapsulando la extracción del body asíncrono y mapeando
-      // cabeceras y métodos dinámicos (GET, POST, PATCH), centralizando la obtención del código de estado HTTP.
-      async function requestJson(
-        url: string,
-        options?: RequestInit,
-      ): Promise<ApiResult> {
-        const response = await fetch(url, options);
-        const data: unknown = await response.json();
 
-        return {
-          statusCode: response.status,
-          ok: response.ok,
-          data,
-        };
-      }
 
 
 
