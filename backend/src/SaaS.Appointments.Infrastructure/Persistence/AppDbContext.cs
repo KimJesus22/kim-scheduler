@@ -119,6 +119,19 @@ public class AppDbContext : DbContext
             entity.Property(x => x.IsClosed)
                 .IsRequired();
 
+            // Evita que un mismo negocio tenga dos horarios para el mismo día.
+            // Ejemplo inválido:
+            // Barbería Nova + Monday
+            // Barbería Nova + Monday
+            //
+            // Esto protege a nivel base de datos, no solo desde el controller.
+            entity.HasIndex(x => new
+                {
+                    x.BusinessId,
+                    x.DayOfWeek
+                })
+                .IsUnique();
+
             entity.HasOne(x => x.Business)
                 .WithMany(x => x.BusinessHours)
                 .HasForeignKey(x => x.BusinessId)
