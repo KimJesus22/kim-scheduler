@@ -76,17 +76,24 @@ La API cuenta con endpoints de salud de infraestructura, el módulo de negocios 
 ### Módulo de Negocios (Businesses)
 | Método | Endpoint | Descripción | Estado |
 | :--- | :--- | :--- | :--- |
-| **POST** | `/api/businesses` | Registra un nuevo negocio local (Nombre, Slug, etc.) |  Activo |
+| **POST** | `/api/businesses` | Registra un nuevo negocio local (Nombre, Slug, etc.) (Requiere Admin) |  Activo |
 | **GET** | `/api/businesses` | Lista todos los negocios registrados activos |  Activo |
 | **GET** | `/api/businesses/{id}` | Obtiene los detalles de un negocio por su ID |  Activo |
-| **PATCH** | `/api/businesses/{id}/deactivate` | Desactiva lógicamente un negocio (Soft Delete) |  Activo |
+| **PATCH** | `/api/businesses/{id}/deactivate` | Desactiva lógicamente un negocio (Soft Delete) (Requiere Admin) |  Activo |
 
 ### Módulo de Servicios (Services)
 | Método | Endpoint | Descripción | Estado |
 | :--- | :--- | :--- | :--- |
-| **POST** | `/api/services` | Registra un nuevo servicio asociado a un negocio |  Activo |
+| **POST** | `/api/services` | Registra un nuevo servicio asociado a un negocio (Requiere Admin) |  Activo |
 | **GET** | `/api/services/business/{businessId}` | Obtiene los servicios activos de un negocio |  Activo |
 | **GET** | `/api/services/{id}` | Obtiene los detalles de un servicio por su ID |  Activo |
+
+### Módulo de Autenticación (Auth)
+| Método | Endpoint | Descripción | Estado |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/auth/register` | Registra un nuevo usuario (primer registro es Admin, los siguientes Staff) |  Activo |
+| **POST** | `/api/auth/login` | Inicia sesión y devuelve el token JWT |  Activo |
+| **GET** | `/api/auth/me` | Obtiene los detalles de la sesión a partir del token (requiere Login) |  Activo |
 
 ### Utilidades & Diagnóstico (Utilities)
 | Método | Endpoint | Descripción | Estado |
@@ -156,11 +163,29 @@ pnpm dev
 
 ---
 
+## 📌 Versiones
+
+### v0.1.0 - Estructura inicial
+
+Incluye la base del proyecto, arquitectura por capas, entidades principales, configuración inicial de EF Core y preparación para MariaDB.
+
+### v0.2.0 - Autenticación
+
+Incluye registro de usuarios, login, password hashing, JWT, roles básicos, endpoint `/api/auth/me`, protección de endpoints administrativos y pantallas frontend para `/register`, `/login` y `/playground`.
+
+### Próxima versión
+
+### v0.3.0 - Appointments Core
+
+Módulo principal de citas. Incluirá gestión de horarios, creación de citas, listado de citas, cancelación y validación básica de disponibilidad.
+
+---
+
 ## 📅 Próximos Pasos (Roadmap)
 
-- [ ]  Implementación de Autenticación mediante **JWT (JSON Web Tokens)**.
+- [x]  Implementación de Autenticación mediante **JWT (JSON Web Tokens)** y Roles.
 - [ ]  Creación de Servicios de Aplicación y Casos de Uso del Backend.
-- [/]  Módulos CRUD para `Service` (¡Endpoints de API listos!).
+- [x]  Módulos CRUD para `Service` (¡Endpoints de API listos y protegidos!).
 - [ ]  Módulos CRUD para `BusinessHour` y `Appointment`.
 - [ ]  Validaciones avanzadas de negocio utilizando **FluentValidation**.
 - [x]  Desarrollo del Frontend interactivo inicial (Landing Page + Playground) en **Astro + Tailwind CSS v4**.

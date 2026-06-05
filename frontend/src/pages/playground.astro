@@ -126,29 +126,6 @@ const apiUrl = "http://localhost:5083";
                     </button>
                 </article>
 
-                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
-                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Limpieza de datos</p>
-                  <h2 class="mt-2 text-xl font-bold">Desactivar negocios demo</h2>
-                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
-                    Oculta negocios creados por error usando soft delete.
-                  </p>
-
-                  <div class="mt-5 flex flex-col gap-3">
-                    <button
-                      id="deactivateBadBusinessButton"
-                      class="w-full rounded-full bg-[var(--ks-accent-soft)] px-4 py-3 text-sm font-bold text-[var(--ks-accent)] hover:bg-[var(--ks-surface-soft)]"
-                    >
-                      Desactivar “Corte clásico”
-                    </button>
-
-                    <button
-                      id="deactivateStringBusinessButton"
-                      class="w-full rounded-full bg-[var(--ks-accent-soft)] px-4 py-3 text-sm font-bold text-[var(--ks-accent)] hover:bg-[var(--ks-surface-soft)]"
-                    >
-                      Desactivar “string”
-                    </button>
-                  </div>
-                </article>
 
                 <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
                   <p class="text-sm font-bold text-[var(--ks-secondary)]">Negocios</p>
@@ -411,13 +388,6 @@ const apiUrl = "http://localhost:5083";
             // Botón para cerrar sesión desde el playground.
             const logoutButton = document.querySelector<HTMLButtonElement>("#logoutButton");
 
-            const deactivateBadBusinessButton = document.querySelector<HTMLButtonElement>(
-                "#deactivateBadBusinessButton"
-            );
-
-            const deactivateStringBusinessButton = document.querySelector<HTMLButtonElement>(
-                "#deactivateStringBusinessButton"
-            );
 
             const refreshBusinessesButton = document.querySelector<HTMLButtonElement>(
                 "#refreshBusinessesButton"
@@ -831,43 +801,6 @@ const apiUrl = "http://localhost:5083";
                 }
             });
 
-            // TODO: Estos dos manejadores usan IDs fijos con fines estrictos de testeo y pruebas manuales del backend.
-            // Se dinamizarán o removerán en fases posteriores de desarrollo.
-            deactivateBadBusinessButton?.addEventListener("click", async () => {
-                try {
-                    const result = await requestJson(
-                        `${apiUrl}/api/businesses/2344f286-2bcc-496c-ae5f-8ba7b4139c6d/deactivate`,
-                        {
-                            method: "PATCH",
-                        }
-                    );
-
-                    showResult(result);
-                } catch {
-                    showResult({
-                        ok: false,
-                        message: "No se pudo desactivar el negocio Corte clásico.",
-                    });
-                }
-            });
-
-            deactivateStringBusinessButton?.addEventListener("click", async () => {
-                try {
-                    const result = await requestJson(
-                        `${apiUrl}/api/businesses/c0300f44-7001-4552-9c49-086c53387b00/deactivate`,
-                        {
-                            method: "PATCH",
-                        }
-                    );
-
-                    showResult(result);
-                } catch {
-                    showResult({
-                        ok: false,
-                        message: "No se pudo desactivar el negocio string.",
-                    });
-                }
-            });
 
             clearResultButton?.addEventListener("click", () => {
                 if (!resultBox) return;
