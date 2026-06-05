@@ -1,6 +1,6 @@
 ---
 // ASTRO FRONTMATTER (Renderizado en Servidor):
-// Este bloque --- se ejecuta estrictamente en el servidor en cada render. 
+// Este bloque --- se ejecuta estrictamente en el servidor en cada render.
 // Aquí definimos HTML estático y enviamos variables iniciales.
 import "../styles/global.css";
 
@@ -8,496 +8,666 @@ const apiUrl = "http://localhost:5083";
 ---
 
 <html lang="es">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Playground | Kim Scheduler</title>
-    </head>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playground | Kim Scheduler</title>
+  </head>
 
-    <body>
-        <main
-            class="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-4 py-6 md:px-8"
-        >
-            <header
-                class="flex flex-col gap-4 rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow md:flex-row md:items-center md:justify-between"
-            >
-                <div>
-                    <a
-                        href="/"
-                        class="text-sm font-semibold text-[var(--ks-secondary)] hover:text-[var(--ks-primary)]"
-                    >
-                        ← Volver a landing
-                    </a>
+  <body>
+    <main
+      class="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-6 px-4 py-6 md:px-8"
+    >
+      <header
+        class="flex flex-col gap-4 rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow md:flex-row md:items-center md:justify-between"
+      >
+        <div>
+          <a
+            href="/"
+            class="text-sm font-semibold text-[var(--ks-secondary)] hover:text-[var(--ks-primary)]"
+          >
+            ← Volver a landing
+          </a>
 
-                    <h1
-                        class="mt-3 text-3xl font-bold tracking-tight text-[var(--ks-text)]"
-                    >
-                        Playground técnico
-                    </h1>
+          <h1
+            class="mt-3 text-3xl font-bold tracking-tight text-[var(--ks-text)]"
+          >
+            Playground técnico
+          </h1>
 
-                    <p class="mt-2 text-[var(--ks-text-muted)]">
-                        Zona temporal para probar endpoints del backend durante
-                        desarrollo.
-                    </p>
-                </div>
+          <p class="mt-2 text-[var(--ks-text-muted)]">
+            Zona temporal para probar endpoints del backend durante desarrollo.
+          </p>
+        </div>
 
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <div
-                    class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-bold text-[var(--ks-primary)]"
-                >
-                    API local: {apiUrl}
-                </div>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div
+            class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-bold text-[var(--ks-primary)]"
+          >
+            API local: {apiUrl}
+          </div>
 
-                <!-- Cierra sesión eliminando el JWT guardado en el navegador. -->
-                <button
-                    id="logoutButton"
-                    class="rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-sm font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-soft)]"
-                    type="button"
-                >
-                    Cerrar sesión
-                </button>
-            </div>
-            </header>
+          <!-- Cierra sesión eliminando el JWT guardado en el navegador. -->
+          <button
+            id="logoutButton"
+            class="rounded-full border border-[var(--ks-border)] bg-[var(--ks-surface)] px-4 py-2 text-sm font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-soft)]"
+            type="button"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </header>
 
-            {/* 
+      {
+        /* 
               HTML ESTÁTICO (Estructura Base):
               Estas secciones y botones existen por defecto en el DOM al cargar la página.
               Los botones tienen IDs específicos para que los scripts clientes los controlen.
-            */}
-            <section class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-                <article
-                    class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
-                >
-                    <p class="text-sm font-bold text-[var(--ks-secondary)]">
-                        Health check
-                    </p>
-                    <h2 class="mt-2 text-xl font-bold">
-                        Conexión a base de datos
-                    </h2>
-                    <p
-                        class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
-                    >
-                        Prueba si la API puede conectarse a MariaDB.
-                    </p>
+            */
+      }
+      <section class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">
+            Health check
+          </p>
+          <h2 class="mt-2 text-xl font-bold">Conexión a base de datos</h2>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Prueba si la API puede conectarse a MariaDB.
+          </p>
 
-                    <button
-                        id="checkDatabaseButton"
-                        class="mt-5 w-full rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
-                    >
-                        Probar conexión
-                    </button>
-                </article>
+          <button
+            id="checkDatabaseButton"
+            class="mt-5 w-full rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+          >
+            Probar conexión
+          </button>
+        </article>
 
-                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
-                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Autenticación</p>
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">
+            Autenticación
+          </p>
 
-                  <h2 class="mt-2 text-xl font-bold">Ver sesión actual</h2>
+          <h2 class="mt-2 text-xl font-bold">Ver sesión actual</h2>
 
-                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
-                    Consulta el endpoint protegido GET /api/auth/me usando el JWT guardado.
-                  </p>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Consulta el endpoint protegido GET /api/auth/me usando el JWT
+            guardado.
+          </p>
 
-                  <button
-                    id="getCurrentUserButton"
-                    class="mt-5 w-full rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
-                  >
-                    Ver sesión
-                  </button>
-                </article>
+          <button
+            id="getCurrentUserButton"
+            class="mt-5 w-full rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+          >
+            Ver sesión
+          </button>
+        </article>
 
-                <article
-                    class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
-                >
-                    <p class="text-sm font-bold text-[var(--ks-secondary)]">
-                        Negocios
-                    </p>
-                    <h2 class="mt-2 text-xl font-bold">Listar negocios</h2>
-                    <p
-                        class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
-                    >
-                        Obtiene los negocios guardados en MariaDB.
-                    </p>
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">Negocios</p>
+          <h2 class="mt-2 text-xl font-bold">Listar negocios</h2>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Obtiene los negocios guardados en MariaDB.
+          </p>
 
-                    <button
-                        id="getBusinessesButton"
-                        class="mt-5 w-full rounded-full bg-[var(--ks-surface-soft)] px-4 py-3 text-sm font-bold text-[var(--ks-primary)] hover:bg-[var(--ks-primary-soft)]"
-                    >
-                        Ver negocios
-                    </button>
-                </article>
+          <button
+            id="getBusinessesButton"
+            class="mt-5 w-full rounded-full bg-[var(--ks-surface-soft)] px-4 py-3 text-sm font-bold text-[var(--ks-primary)] hover:bg-[var(--ks-primary-soft)]"
+          >
+            Ver negocios
+          </button>
+        </article>
 
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">Negocios</p>
 
-                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
-                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Negocios</p>
+          <h2 class="mt-2 text-xl font-bold">Crear negocio</h2>
 
-                  <h2 class="mt-2 text-xl font-bold">Crear negocio</h2>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Crea un negocio activo en MariaDB usando el endpoint POST
+            /api/businesses.
+          </p>
 
-                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
-                    Crea un negocio activo en MariaDB usando el endpoint POST /api/businesses.
-                  </p>
-
-                  <!--
+          <!--
                     Este formulario es temporal para desarrollo.
                     Más adelante esta acción vivirá en /admin o en un panel protegido con login.
                   -->
-                  <form id="createBusinessForm" class="mt-5 flex flex-col gap-3">
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Nombre del negocio
-                      <input
-                        id="businessNameInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        type="text"
-                        placeholder="Barbería Nova"
-                        required
-                      />
-                    </label>
+          <form id="createBusinessForm" class="mt-5 flex flex-col gap-3">
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Nombre del negocio
+              <input
+                id="businessNameInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="text"
+                placeholder="Barbería Nova"
+                required
+              />
+            </label>
 
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Slug
-                      <input
-                        id="businessSlugInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        type="text"
-                        placeholder="barberia-nova"
-                        required
-                      />
-                    </label>
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Slug
+              <input
+                id="businessSlugInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="text"
+                placeholder="barberia-nova"
+                required
+              />
+            </label>
 
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Teléfono
-                      <input
-                        id="businessPhoneInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        type="text"
-                        placeholder="4629876543"
-                      />
-                    </label>
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Teléfono
+              <input
+                id="businessPhoneInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="text"
+                placeholder="4629876543"
+              />
+            </label>
 
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Email
-                      <input
-                        id="businessEmailInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        type="email"
-                        placeholder="contacto@barberianova.com"
-                      />
-                    </label>
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Email
+              <input
+                id="businessEmailInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="email"
+                placeholder="contacto@barberianova.com"
+              />
+            </label>
 
-                    <button
-                      class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
-                      type="submit"
-                    >
-                      Crear negocio
-                    </button>
-                  </form>
-                </article>
+            <button
+              class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+              type="submit"
+            >
+              Crear negocio
+            </button>
+          </form>
+        </article>
 
-                <article class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
-                  <p class="text-sm font-bold text-[var(--ks-secondary)]">Servicios</p>
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">Servicios</p>
 
-                  <h2 class="mt-2 text-xl font-bold">Crear servicio</h2>
+          <h2 class="mt-2 text-xl font-bold">Crear servicio</h2>
 
-                  <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
-                    Crea un servicio asociado a un negocio usando POST /api/services. Requiere Admin.
-                  </p>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Crea un servicio asociado a un negocio usando POST /api/services.
+            Requiere Admin.
+          </p>
 
-                  <form id="createServiceForm" class="mt-5 flex flex-col gap-3">
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Negocio
-                      <select
-                        id="serviceBusinessIdInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        required
-                      >
-                        <option value="">Cargando negocios...</option>
-                      </select>
-                    </label>
+          <form id="createServiceForm" class="mt-5 flex flex-col gap-3">
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Negocio
+              <select
+                id="serviceBusinessIdInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                required
+              >
+                <option value="">Cargando negocios...</option>
+              </select>
+            </label>
 
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Nombre del servicio
-                      <input
-                        id="serviceNameInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        type="text"
-                        placeholder="Corte de cabello"
-                        required
-                      />
-                    </label>
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Nombre del servicio
+              <input
+                id="serviceNameInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="text"
+                placeholder="Corte de cabello"
+                required
+              />
+            </label>
 
-                    <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                      Descripción
-                      <input
-                        id="serviceDescriptionInput"
-                        class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                        type="text"
-                        placeholder="Corte clásico con tijera y máquina"
-                      />
-                    </label>
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Descripción
+              <input
+                id="serviceDescriptionInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="text"
+                placeholder="Corte clásico con tijera y máquina"
+              />
+            </label>
 
-                    <div class="grid grid-cols-2 gap-3">
-                      <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                        Duración (min)
-                        <input
-                          id="serviceDurationInput"
-                          class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                          type="number"
-                          min="1"
-                          placeholder="30"
-                          required
-                        />
-                      </label>
+            <div class="grid grid-cols-2 gap-3">
+              <label
+                class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+              >
+                Duración (min)
+                <input
+                  id="serviceDurationInput"
+                  class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                  type="number"
+                  min="1"
+                  placeholder="30"
+                  required
+                />
+              </label>
 
-                      <label class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]">
-                        Precio ($)
-                        <input
-                          id="servicePriceInput"
-                          class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          placeholder="15.00"
-                          required
-                        />
-                      </label>
-                    </div>
+              <label
+                class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+              >
+                Precio ($)
+                <input
+                  id="servicePriceInput"
+                  class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="15.00"
+                  required
+                />
+              </label>
+            </div>
 
-                    <button
-                      class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
-                      type="submit"
-                    >
-                      Crear servicio
-                    </button>
-                  </form>
-                </article>
+            <button
+              class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+              type="submit"
+            >
+              Crear servicio
+            </button>
+          </form>
+        </article>
 
-                <article
-                    class="rounded-[1.5rem] border border-dashed border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-5"
-                >
-                    <p class="text-sm font-bold text-[var(--ks-text-muted)]">
-                        Citas
-                    </p>
-                    <h2
-                        class="mt-2 text-xl font-bold text-[var(--ks-text-muted)]"
-                    >
-                        Próximamente
-                    </h2>
-                    <p
-                        class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]"
-                    >
-                        Aquí probaremos reservar, confirmar y cancelar citas.
-                    </p>
-                </article>
-            </section>
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">Horarios</p>
 
-            <section class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow">
-              <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h2 class="text-xl font-bold">Negocios activos</h2>
-                  <p class="text-sm text-[var(--ks-text-muted)]">
-                    Lista visual de negocios obtenidos desde MariaDB.
-                  </p>
-                </div>
+          <h2 class="mt-2 text-xl font-bold">Crear horario</h2>
 
-                <button
-                  id="refreshBusinessesButton"
-                  class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
-                >
-                  Actualizar lista
-                </button>
-              </div>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Configura el horario laboral de un negocio para un día específico.
+          </p>
 
-              {/* 
+          <!--
+                    Formulario temporal de desarrollo.
+                    Más adelante esta acción vivirá en /admin/business-hours.
+                  -->
+          <form id="createBusinessHourForm" class="mt-5 flex flex-col gap-3">
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Business ID
+              <input
+                id="businessHourBusinessIdInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="text"
+                placeholder="Pega aquí el ID del negocio"
+                required
+              />
+            </label>
+
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Día de la semana
+              <select
+                id="businessHourDayInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                required
+              >
+                <option value="1">Lunes</option>
+                <option value="2">Martes</option>
+                <option value="3">Miércoles</option>
+                <option value="4">Jueves</option>
+                <option value="5">Viernes</option>
+                <option value="6">Sábado</option>
+                <option value="0">Domingo</option>
+              </select>
+            </label>
+
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Hora de apertura
+              <input
+                id="businessHourOpenTimeInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="time"
+                value="09:00"
+              />
+            </label>
+
+            <label
+              class="flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              Hora de cierre
+              <input
+                id="businessHourCloseTimeInput"
+                class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+                type="time"
+                value="18:00"
+              />
+            </label>
+
+            <label
+              class="flex items-center gap-2 text-sm font-semibold text-[var(--ks-text)]"
+            >
+              <input id="businessHourIsClosedInput" type="checkbox" />
+              Día cerrado
+            </label>
+
+            <button
+              class="mt-2 rounded-full bg-[var(--ks-primary)] px-4 py-3 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+              type="submit"
+            >
+              Crear horario
+            </button>
+          </form>
+        </article>
+
+        <article
+          class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+        >
+          <p class="text-sm font-bold text-[var(--ks-secondary)]">Horarios</p>
+
+          <h2 class="mt-2 text-xl font-bold">Listar horarios</h2>
+
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Consulta los horarios configurados para un negocio.
+          </p>
+
+          <label
+            class="mt-5 flex flex-col gap-1 text-sm font-semibold text-[var(--ks-text)]"
+          >
+            Business ID
+            <input
+              id="getBusinessHoursBusinessIdInput"
+              class="rounded-xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] px-4 py-3 text-sm outline-none focus:border-[var(--ks-primary)]"
+              type="text"
+              placeholder="Pega aquí el ID del negocio"
+            />
+          </label>
+
+          <button
+            id="getBusinessHoursButton"
+            class="mt-5 w-full rounded-full bg-[var(--ks-surface-soft)] px-4 py-3 text-sm font-bold text-[var(--ks-primary)] hover:bg-[var(--ks-primary-soft)]"
+          >
+            Ver horarios
+          </button>
+        </article>
+
+        <article
+          class="rounded-[1.5rem] border border-dashed border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-5"
+        >
+          <p class="text-sm font-bold text-[var(--ks-text-muted)]">Citas</p>
+          <h2 class="mt-2 text-xl font-bold text-[var(--ks-text-muted)]">
+            Próximamente
+          </h2>
+          <p class="mt-2 text-sm leading-6 text-[var(--ks-text-muted)]">
+            Aquí probaremos reservar, confirmar y cancelar citas.
+          </p>
+        </article>
+      </section>
+
+      <section
+        class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+      >
+        <div
+          class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+        >
+          <div>
+            <h2 class="text-xl font-bold">Negocios activos</h2>
+            <p class="text-sm text-[var(--ks-text-muted)]">
+              Lista visual de negocios obtenidos desde MariaDB.
+            </p>
+          </div>
+
+          <button
+            id="refreshBusinessesButton"
+            class="rounded-full bg-[var(--ks-primary)] px-4 py-2 text-sm font-bold text-white hover:bg-[var(--ks-secondary)]"
+          >
+            Actualizar lista
+          </button>
+        </div>
+
+        {
+          /* 
                 HTML DINÁMICO (Contenedor):
                 Este elemento contenedor inicia vacío o con un placeholder de carga.
                 A través del script cliente, inyectaremos código HTML mapeado dinámicamente.
-              */}
-              <div
-                id="businessesList"
-                class="mt-5 grid gap-4 md:grid-cols-2"
-              >
-                <p class="text-sm text-[var(--ks-text-muted)]">
-                  Presiona “Actualizar lista” para cargar negocios.
-                </p>
-              </div>
-            </section>
+              */
+        }
+        <div id="businessesList" class="mt-5 grid gap-4 md:grid-cols-2">
+          <p class="text-sm text-[var(--ks-text-muted)]">
+            Presiona “Actualizar lista” para cargar negocios.
+          </p>
+        </div>
+      </section>
 
-            <section
-                class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
-            >
-                <div
-                    class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
-                >
-                    <div>
-                        <h2 class="text-xl font-bold">Respuesta del backend</h2>
-                        <p class="text-sm text-[var(--ks-text-muted)]">
-                            Aquí verás el JSON que regrese la API.
-                        </p>
-                    </div>
+      <section
+        class="rounded-[1.5rem] border border-[var(--ks-border)] bg-[var(--ks-surface)] p-5 ks-card-shadow"
+      >
+        <div
+          class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between"
+        >
+          <div>
+            <h2 class="text-xl font-bold">Respuesta del backend</h2>
+            <p class="text-sm text-[var(--ks-text-muted)]">
+              Aquí verás el JSON que regrese la API.
+            </p>
+          </div>
 
-                    <button
-                        id="clearResultButton"
-                        class="rounded-full border border-[var(--ks-border)] px-4 py-2 text-sm font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-soft)]"
-                    >
-                        Limpiar
-                    </button>
-                </div>
+          <button
+            id="clearResultButton"
+            class="rounded-full border border-[var(--ks-border)] px-4 py-2 text-sm font-bold text-[var(--ks-secondary)] hover:bg-[var(--ks-surface-soft)]"
+          >
+            Limpiar
+          </button>
+        </div>
 
-                <pre
-                    id="resultBox"
-                    class="mt-5 min-h-40 overflow-auto rounded-2xl bg-[var(--ks-surface-soft)] p-4 text-sm text-[var(--ks-text)]">Sin respuesta todavía.</pre>
-            </section>
-        </main>
+        <pre
+          id="resultBox"
+          class="mt-5 min-h-40 overflow-auto rounded-2xl bg-[var(--ks-surface-soft)] p-4 text-sm text-[var(--ks-text)]">Sin respuesta todavía.</pre>
+      </section>
+    </main>
 
-        <script>
-            // CLIENT-SIDE SCRIPT: Este código se descarga y ejecuta enteramente en el navegador del cliente.
-            const apiUrl = "http://localhost:5083";
+    <script>
+      // CLIENT-SIDE SCRIPT: Este código se descarga y ejecuta enteramente en el navegador del cliente.
+      import {
+        clearAuthSession,
+        getAuthHeaders,
+        getAuthToken,
+        isAuthenticated,
+      } from "../lib/auth";
 
-            // Revisamos si existe un JWT guardado en localStorage.
-            // Si no hay token, significa que el usuario no inició sesión.
-            const storedToken = localStorage.getItem("kim_scheduler_token");
+      const apiUrl = "http://localhost:5083";
 
-            // /playground es una herramienta interna de desarrollo.
-            // Si el usuario no tiene token, lo mandamos a /login.
-            if (!storedToken) {
-              window.location.href = "/login";
-            }
+      // /playground es una herramienta interna.
+      // Si no hay sesión local, mandamos al usuario a login.
+      if (!isAuthenticated()) {
+        window.location.href = "/login";
+      }
 
-            // querySelector con Genéricos de TypeScript (<HTMLButtonElement> / <HTMLDivElement>):
-            // Por defecto, querySelector retorna un tipo genérico 'Element' que carece de métodos específicos.
-            // Al castearlo explícitamente, le enseñamos a TypeScript qué clase de objeto DOM es. Esto habilita:
-            // 1. Validaciones del compilador (ej. TypeScript sabe que un HTMLButtonElement tiene una propiedad 'disabled').
-            // 2. Autocompletado inteligente en el editor de código.
-            const resultBox =
-                document.querySelector<HTMLPreElement>("#resultBox");
-            const checkDatabaseButton =
-                document.querySelector<HTMLButtonElement>(
-                    "#checkDatabaseButton",
-                );
-            const getBusinessesButton =
-                document.querySelector<HTMLButtonElement>(
-                    "#getBusinessesButton",
-                );
-            const clearResultButton =
-                document.querySelector<HTMLButtonElement>("#clearResultButton");
+      // querySelector con Genéricos de TypeScript (<HTMLButtonElement> / <HTMLDivElement>):
+      // Por defecto, querySelector retorna un tipo genérico 'Element' que carece de métodos específicos.
+      // Al castearlo explícitamente, le enseñamos a TypeScript qué clase de objeto DOM es. Esto habilita:
+      // 1. Validaciones del compilador (ej. TypeScript sabe que un HTMLButtonElement tiene una propiedad 'disabled').
+      // 2. Autocompletado inteligente en el editor de código.
+      const resultBox = document.querySelector<HTMLPreElement>("#resultBox");
+      const checkDatabaseButton = document.querySelector<HTMLButtonElement>(
+        "#checkDatabaseButton",
+      );
+      const getBusinessesButton = document.querySelector<HTMLButtonElement>(
+        "#getBusinessesButton",
+      );
+      const clearResultButton =
+        document.querySelector<HTMLButtonElement>("#clearResultButton");
 
-            // Botón para probar si el JWT guardado permite consultar /api/auth/me.
-            const getCurrentUserButton = document.querySelector<HTMLButtonElement>(
-              "#getCurrentUserButton"
-            );
+      // Botón para probar si el JWT guardado permite consultar /api/auth/me.
+      const getCurrentUserButton = document.querySelector<HTMLButtonElement>(
+        "#getCurrentUserButton",
+      );
 
-            // Botón para cerrar sesión desde el playground.
-            const logoutButton = document.querySelector<HTMLButtonElement>("#logoutButton");
+      // Botón para cerrar sesión desde el playground.
+      const logoutButton =
+        document.querySelector<HTMLButtonElement>("#logoutButton");
 
+      const refreshBusinessesButton = document.querySelector<HTMLButtonElement>(
+        "#refreshBusinessesButton",
+      );
 
-            const refreshBusinessesButton = document.querySelector<HTMLButtonElement>(
-                "#refreshBusinessesButton"
-            );
+      const businessesList =
+        document.querySelector<HTMLDivElement>("#businessesList");
 
-            const businessesList = document.querySelector<HTMLDivElement>("#businessesList");
+      // Referencias al formulario y sus campos.
+      // Usamos tipos específicos para que TypeScript sepa qué propiedades existen,
+      // por ejemplo .value en inputs y .reset() en formularios.
+      const createBusinessForm = document.querySelector<HTMLFormElement>(
+        "#createBusinessForm",
+      );
 
-            // Referencias al formulario y sus campos.
-            // Usamos tipos específicos para que TypeScript sepa qué propiedades existen,
-            // por ejemplo .value en inputs y .reset() en formularios.
-            const createBusinessForm = document.querySelector<HTMLFormElement>(
-                "#createBusinessForm"
-            );
+      const businessNameInput =
+        document.querySelector<HTMLInputElement>("#businessNameInput");
 
-            const businessNameInput = document.querySelector<HTMLInputElement>(
-                "#businessNameInput"
-            );
+      const businessSlugInput =
+        document.querySelector<HTMLInputElement>("#businessSlugInput");
 
-            const businessSlugInput = document.querySelector<HTMLInputElement>(
-                "#businessSlugInput"
-            );
+      const businessPhoneInput = document.querySelector<HTMLInputElement>(
+        "#businessPhoneInput",
+      );
 
-            const businessPhoneInput = document.querySelector<HTMLInputElement>(
-                "#businessPhoneInput"
-            );
+      const businessEmailInput = document.querySelector<HTMLInputElement>(
+        "#businessEmailInput",
+      );
 
-            const businessEmailInput = document.querySelector<HTMLInputElement>(
-                "#businessEmailInput"
-            );
+      const createServiceForm =
+        document.querySelector<HTMLFormElement>("#createServiceForm");
 
-            const createServiceForm = document.querySelector<HTMLFormElement>(
-                "#createServiceForm"
-            );
+      const serviceBusinessIdInput = document.querySelector<HTMLSelectElement>(
+        "#serviceBusinessIdInput",
+      );
 
-            const serviceBusinessIdInput = document.querySelector<HTMLSelectElement>(
-                "#serviceBusinessIdInput"
-            );
+      const serviceNameInput =
+        document.querySelector<HTMLInputElement>("#serviceNameInput");
 
-            const serviceNameInput = document.querySelector<HTMLInputElement>(
-                "#serviceNameInput"
-            );
+      const serviceDescriptionInput = document.querySelector<HTMLInputElement>(
+        "#serviceDescriptionInput",
+      );
 
-            const serviceDescriptionInput = document.querySelector<HTMLInputElement>(
-                "#serviceDescriptionInput"
-            );
+      const serviceDurationInput = document.querySelector<HTMLInputElement>(
+        "#serviceDurationInput",
+      );
 
-            const serviceDurationInput = document.querySelector<HTMLInputElement>(
-                "#serviceDurationInput"
-            );
+      const servicePriceInput =
+        document.querySelector<HTMLInputElement>("#servicePriceInput");
 
-            const servicePriceInput = document.querySelector<HTMLInputElement>(
-                "#servicePriceInput"
-            );
+      // Formulario para crear horarios laborales.
+      const createBusinessHourForm = document.querySelector<HTMLFormElement>(
+        "#createBusinessHourForm",
+      );
 
-            type ApiResult = {
-                statusCode: number;
-                ok: boolean;
-                data: unknown; // unknown vs any: 'unknown' es la alternativa segura a 'any' en TypeScript.
-                               // Obliga al desarrollador a comprobar el tipo de dato (por ej. con Array.isArray)
-                               // antes de acceder a sus propiedades, previniendo excepciones en tiempo de ejecución.
-            };
+      const businessHourBusinessIdInput =
+        document.querySelector<HTMLInputElement>(
+          "#businessHourBusinessIdInput",
+        );
 
-            type Business = {
-                id: string;
-                name: string;
-                slug: string;
-                phone: string | null;
-                email: string | null;
-                isActive: boolean;
-                createdAtUtc: string;
-            };
+      const businessHourDayInput = document.querySelector<HTMLSelectElement>(
+        "#businessHourDayInput",
+      );
 
-            function showResult(data: unknown): void {
-                if (!resultBox) return;
+      const businessHourOpenTimeInput =
+        document.querySelector<HTMLInputElement>("#businessHourOpenTimeInput");
 
-                resultBox.textContent = JSON.stringify(data, null, 2);
-            }
+      const businessHourCloseTimeInput =
+        document.querySelector<HTMLInputElement>("#businessHourCloseTimeInput");
 
-            // HTML DINÁMICO (renderBusinesses):
-            // Esta función borra el contenido del contenedor del DOM y construye dinámicamente tarjetas HTML
-            // para cada negocio de la base de datos mapeando los objetos JS a strings utilizando Template Literals.
-            function renderBusinesses(businesses: Business[]): void {
-                if (!businessesList) return;
+      const businessHourIsClosedInput =
+        document.querySelector<HTMLInputElement>("#businessHourIsClosedInput");
 
-                if (serviceBusinessIdInput) {
-                    if (businesses.length === 0) {
-                        serviceBusinessIdInput.innerHTML = '<option value="">No hay negocios activos</option>';
-                    } else {
-                        serviceBusinessIdInput.innerHTML = businesses
-                            .map(b => `<option value="${b.id}">${b.name} (${b.id.substring(0, 8)})</option>`)
-                            .join("");
-                    }
-                }
+      // Elementos para consultar horarios por negocio.
+      const getBusinessHoursBusinessIdInput =
+        document.querySelector<HTMLInputElement>(
+          "#getBusinessHoursBusinessIdInput",
+        );
 
-                if (businesses.length === 0) {
-                    businessesList.innerHTML = `
+      const getBusinessHoursButton = document.querySelector<HTMLButtonElement>(
+        "#getBusinessHoursButton",
+      );
+
+      type ApiResult = {
+        statusCode: number;
+        ok: boolean;
+        data: unknown; // unknown vs any: 'unknown' es la alternativa segura a 'any' en TypeScript.
+        // Obliga al desarrollador a comprobar el tipo de dato (por ej. con Array.isArray)
+        // antes de acceder a sus propiedades, previniendo excepciones en tiempo de ejecución.
+      };
+
+      type Business = {
+        id: string;
+        name: string;
+        slug: string;
+        phone: string | null;
+        email: string | null;
+        isActive: boolean;
+        createdAtUtc: string;
+      };
+
+      function showResult(data: unknown): void {
+        if (!resultBox) return;
+
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      }
+
+      // HTML DINÁMICO (renderBusinesses):
+      // Esta función borra el contenido del contenedor del DOM y construye dinámicamente tarjetas HTML
+      // para cada negocio de la base de datos mapeando los objetos JS a strings utilizando Template Literals.
+      function renderBusinesses(businesses: Business[]): void {
+        if (!businessesList) return;
+
+        if (serviceBusinessIdInput) {
+          if (businesses.length === 0) {
+            serviceBusinessIdInput.innerHTML =
+              '<option value="">No hay negocios activos</option>';
+          } else {
+            serviceBusinessIdInput.innerHTML = businesses
+              .map(
+                (b) =>
+                  `<option value="${b.id}">${b.name} (${b.id.substring(0, 8)})</option>`,
+              )
+              .join("");
+          }
+        }
+
+        if (businesses.length === 0) {
+          businessesList.innerHTML = `
                         <p class="text-sm text-[var(--ks-text-muted)]">
                             No hay negocios activos todavía.
                         </p>
                     `;
-                    return;
-                }
+          return;
+        }
 
-                // data-business-id (Atributo de Datos Personalizado):
-                // Permite guardar metadatos (como el UUID/ID de la base de datos de cada negocio)
-                // directamente incrustados en la etiqueta HTML del botón.
-                // Luego podemos recuperarlo en JS con 'element.dataset.businessId'.
-                businessesList.innerHTML = businesses
-                    .map(
-                        (business) => `
+        // data-business-id (Atributo de Datos Personalizado):
+        // Permite guardar metadatos (como el UUID/ID de la base de datos de cada negocio)
+        // directamente incrustados en la etiqueta HTML del botón.
+        // Luego podemos recuperarlo en JS con 'element.dataset.businessId'.
+        businessesList.innerHTML = businesses
+          .map(
+            (business) => `
                             <article class="rounded-2xl border border-[var(--ks-border)] bg-[var(--ks-surface-soft)] p-4">
                                 <div class="flex items-start justify-between gap-3">
                                     <div>
@@ -526,330 +696,417 @@ const apiUrl = "http://localhost:5083";
                                     Desactivar negocio
                                 </button>
                             </article>
-                        `
-                    )
-                    .join("");
+                        `,
+          )
+          .join("");
+      }
+
+      // ENLAZADO DINÁMICO DE EVENTOS (bindDeactivateBusinessButtons):
+      // ¿Por qué llamarlo después de renderBusinesses?
+      // Al inyectar código dinámicamente con innerHTML, los botones ".deactivate-business-button"
+      // NO existen en el DOM al cargar la página. Si intentáramos enlazarlos al inicio, querySelectorAll
+      // devolvería una lista vacía. Debemos llamar a bindDeactivateBusinessButtons justo después de
+      // pintar las tarjetas para encontrar estos botones recién añadidos al DOM y enlazarles el evento click.
+      function bindDeactivateBusinessButtons(): void {
+        const deactivateButtons = document.querySelectorAll<HTMLButtonElement>(
+          ".deactivate-business-button",
+        );
+
+        deactivateButtons.forEach((button) => {
+          button.addEventListener("click", async () => {
+            // Obtenemos el ID almacenado en la propiedad dataset (data-business-id) del HTML.
+            const businessId = button.dataset.businessId;
+
+            if (!businessId) {
+              showResult({
+                ok: false,
+                message: "No se encontró el ID del negocio.",
+              });
+              return;
             }
 
-            // ENLAZADO DINÁMICO DE EVENTOS (bindDeactivateBusinessButtons):
-            // ¿Por qué llamarlo después de renderBusinesses?
-            // Al inyectar código dinámicamente con innerHTML, los botones ".deactivate-business-button"
-            // NO existen en el DOM al cargar la página. Si intentáramos enlazarlos al inicio, querySelectorAll
-            // devolvería una lista vacía. Debemos llamar a bindDeactivateBusinessButtons justo después de 
-            // pintar las tarjetas para encontrar estos botones recién añadidos al DOM y enlazarles el evento click.
-            function bindDeactivateBusinessButtons(): void {
-                const deactivateButtons = document.querySelectorAll<HTMLButtonElement>(
-                    ".deactivate-business-button"
-                );
+            try {
+              // LLAMADA HTTP PATCH (Soft Delete):
+              // Se ejecuta asíncronamente conectándose al endpoint del backend para inactivar el negocio.
+              const result = await requestJson(
+                `${apiUrl}/api/businesses/${businessId}/deactivate`,
+                {
+                  method: "PATCH",
+                },
+              );
 
-                deactivateButtons.forEach((button) => {
-                    button.addEventListener("click", async () => {
-                        // Obtenemos el ID almacenado en la propiedad dataset (data-business-id) del HTML.
-                        const businessId = button.dataset.businessId;
+              showResult(result);
 
-                        if (!businessId) {
-                            showResult({
-                                ok: false,
-                                message: "No se encontró el ID del negocio.",
-                            });
-                            return;
-                        }
+              // Refresco de Datos Reactivo: Tras desactivar un comercio, llamamos de nuevo al backend
+              // para actualizar el listado visual sin recargar la página web.
+              const businessesResult = await requestJson(
+                `${apiUrl}/api/businesses`,
+              );
 
-                        try {
-                            // LLAMADA HTTP PATCH (Soft Delete):
-                            // Se ejecuta asíncronamente conectándose al endpoint del backend para inactivar el negocio.
-                            const result = await requestJson(
-                                `${apiUrl}/api/businesses/${businessId}/deactivate`,
-                                {
-                                    method: "PATCH",
-                                }
-                            );
-
-                            showResult(result);
-
-                            // Refresco de Datos Reactivo: Tras desactivar un comercio, llamamos de nuevo al backend
-                            // para actualizar el listado visual sin recargar la página web.
-                            const businessesResult = await requestJson(`${apiUrl}/api/businesses`);
-
-                            if (Array.isArray(businessesResult.data)) {
-                                renderBusinesses(businessesResult.data as Business[]);
-                                bindDeactivateBusinessButtons(); // Re-enlazamos los clics a las tarjetas recién pintadas.
-                            }
-                        } catch {
-                            showResult({
-                                ok: false,
-                                message: "No se pudo desactivar el negocio.",
-                            });
-                        }
-                    });
-                });
-            }
-
-            // API FETCH WRAPPER (requestJson):
-            // Abstracción reutilizable del fetch nativo.
-            // Simplifica las llamadas asíncronas encapsulando la extracción del body asíncrono y mapeando
-            // cabeceras y métodos dinámicos (GET, POST, PATCH), centralizando la obtención del código de estado HTTP.
-            async function requestJson(
-                url: string,
-                options?: RequestInit
-            ): Promise<ApiResult> {
-                const response = await fetch(url, options);
-                const data: unknown = await response.json();
-
-                return {
-                    statusCode: response.status,
-                    ok: response.ok,
-                    data,
-                };
-            }
-
-            // Lee el JWT guardado después del login.
-            // Si el usuario no ha iniciado sesión, regresará null.
-            function getAuthToken(): string | null {
-              return localStorage.getItem("kim_scheduler_token");
-            }
-
-            // Construye headers para endpoints protegidos.
-            // Authorization: Bearer {token} es lo que ASP.NET Core espera para validar JWT.
-            function getAuthHeaders(): HeadersInit {
-              const token = getAuthToken();
-
-              if (!token) {
-                return {
-                  "Content-Type": "application/json",
-                };
+              if (Array.isArray(businessesResult.data)) {
+                renderBusinesses(businessesResult.data as Business[]);
+                bindDeactivateBusinessButtons(); // Re-enlazamos los clics a las tarjetas recién pintadas.
               }
-
-              return {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-              };
+            } catch {
+              showResult({
+                ok: false,
+                message: "No se pudo desactivar el negocio.",
+              });
             }
+          });
+        });
+      }
 
-            // LISTENERS DE INTERACCIÓN CLIENTE:
-            
-            // 1. Health check de base de datos (petición GET de diagnóstico)
-            checkDatabaseButton?.addEventListener("click", async () => {
-                try {
-                    const result = await requestJson(
-                        `${apiUrl}/api/health/database`,
-                    );
-                    showResult(result);
-                } catch {
-                    showResult({
-                        ok: false,
-                        message:
-                            "No se pudo conectar con la API. Revisa que el backend esté corriendo.",
-                    });
-                }
-            });
+      // API FETCH WRAPPER (requestJson):
+      // Abstracción reutilizable del fetch nativo.
+      // Simplifica las llamadas asíncronas encapsulando la extracción del body asíncrono y mapeando
+      // cabeceras y métodos dinámicos (GET, POST, PATCH), centralizando la obtención del código de estado HTTP.
+      async function requestJson(
+        url: string,
+        options?: RequestInit,
+      ): Promise<ApiResult> {
+        const response = await fetch(url, options);
+        const data: unknown = await response.json();
 
-            // 2. Consulta cruda de Negocios (GET /api/businesses)
-            getBusinessesButton?.addEventListener("click", async () => {
-                try {
-                    const result = await requestJson(
-                        `${apiUrl}/api/businesses`,
-                    );
-                    showResult(result);
-                } catch {
-                    showResult({
-                        ok: false,
-                        message: "No se pudo obtener la lista de negocios.",
-                    });
-                }
-            });
-
-            // 3. Consulta de Negocios y Renderizado Visual Dinámico en la interfaz
-            refreshBusinessesButton?.addEventListener("click", async () => {
-                try {
-                    const result = await requestJson(`${apiUrl}/api/businesses`);
-
-                    showResult(result);
-
-                    if (Array.isArray(result.data)) {
-                        renderBusinesses(result.data as Business[]);
-                        bindDeactivateBusinessButtons(); // Indispensable llamar aquí para registrar clics en los nuevos botones dinámicos.
-                    }
-                } catch {
-                    showResult({
-                        ok: false,
-                        message: "No se pudo actualizar la lista de negocios.",
-                    });
-                }
-            });
-
-            // 4. Envío del Formulario para Crear Negocio (POST /api/businesses)
-            createBusinessForm?.addEventListener("submit", async (event) => {
-                // Evita que el navegador recargue la página al enviar el formulario.
-                event.preventDefault();
-
-                // Validamos que existan los inputs antes de leer sus valores.
-                // Esto evita errores si algún ID está mal escrito en el HTML.
-                if (!businessNameInput || !businessSlugInput) {
-                    showResult({
-                        ok: false,
-                        message: "No se encontraron los campos obligatorios del formulario.",
-                    });
-                    return;
-                }
-
-                // Creamos el objeto que espera el backend en CreateBusinessRequest.
-                const payload = {
-                    name: businessNameInput.value.trim(),
-                    slug: businessSlugInput.value.trim().toLowerCase(),
-                    phone: businessPhoneInput?.value.trim() || null,
-                    email: businessEmailInput?.value.trim() || null,
-                };
-
-                // Crear negocio ya está protegido con [Authorize].
-                // Si no hay token, avisamos antes de llamar al backend.
-                if (!getAuthToken()) {
-                  showResult({
-                    ok: false,
-                    message: "Necesitas iniciar sesión antes de crear negocios.",
-                  });
-
-                  return;
-                }
-
-                try {
-                    // Enviamos el negocio al backend usando POST.
-                    const result = await requestJson(`${apiUrl}/api/businesses`, {
-                        method: "POST",
-
-                        // Mandamos el JWT en Authorization para pasar [Authorize].
-                        headers: getAuthHeaders(),
-
-                        body: JSON.stringify(payload),
-                    });
-
-                    showResult(result);
-
-                    // Si el backend respondió bien (ok = true), limpiamos los campos del formulario.
-                    if (result.ok) {
-                        createBusinessForm.reset();
-                    }
-
-                    // Después de crear, volvemos a pedir la lista actualizada del backend para refrescar las tarjetas.
-                    const businessesResult = await requestJson(`${apiUrl}/api/businesses`);
-
-                    if (Array.isArray(businessesResult.data)) {
-                        renderBusinesses(businessesResult.data as Business[]);
-                        bindDeactivateBusinessButtons(); // Reconectamos los botones de las nuevas tarjetas inyectadas dinámicamente.
-                    }
-                } catch {
-                    showResult({
-                        ok: false,
-                        message: "No se pudo crear el negocio. Revisa que el backend esté corriendo.",
-                    });
-                }
-            });
-
-            createServiceForm?.addEventListener("submit", async (event) => {
-                event.preventDefault();
-
-                if (!serviceBusinessIdInput || !serviceNameInput || !serviceDurationInput || !servicePriceInput) {
-                    showResult({
-                        ok: false,
-                        message: "No se encontraron los campos obligatorios del formulario de servicios.",
-                    });
-                    return;
-                }
-
-                const businessId = serviceBusinessIdInput.value;
-                if (!businessId) {
-                    showResult({
-                        ok: false,
-                        message: "Por favor selecciona un negocio.",
-                    });
-                    return;
-                }
-
-                const payload = {
-                    businessId: businessId,
-                    name: serviceNameInput.value.trim(),
-                    description: serviceDescriptionInput?.value.trim() || null,
-                    durationMinutes: parseInt(serviceDurationInput.value, 10),
-                    price: parseFloat(servicePriceInput.value),
-                };
-
-                if (!getAuthToken()) {
-                    showResult({
-                        ok: false,
-                        message: "Necesitas iniciar sesión antes de crear servicios.",
-                    });
-                    return;
-                }
-
-                try {
-                    const result = await requestJson(`${apiUrl}/api/services`, {
-                        method: "POST",
-                        headers: getAuthHeaders(),
-                        body: JSON.stringify(payload),
-                    });
-
-                    showResult(result);
-
-                    if (result.ok) {
-                        createServiceForm.reset();
-                    }
-                } catch {
-                    showResult({
-                        ok: false,
-                        message: "No se pudo crear el servicio. Revisa que el backend esté corriendo.",
-                    });
-                }
-            });
+        return {
+          statusCode: response.status,
+          ok: response.ok,
+          data,
+        };
+      }
 
 
-            clearResultButton?.addEventListener("click", () => {
-                if (!resultBox) return;
 
-                resultBox.textContent = "Sin respuesta todavía.";
-            });
+      // LISTENERS DE INTERACCIÓN CLIENTE:
 
-            getCurrentUserButton?.addEventListener("click", async () => {
-              try {
-                // Este endpoint está protegido con [Authorize].
-                // Por eso mandamos Authorization: Bearer {token}.
-                const result = await requestJson(`${apiUrl}/api/auth/me`, {
-                  method: "GET",
-                  headers: getAuthHeaders(),
-                });
+      // 1. Health check de base de datos (petición GET de diagnóstico)
+      checkDatabaseButton?.addEventListener("click", async () => {
+        try {
+          const result = await requestJson(`${apiUrl}/api/health/database`);
+          showResult(result);
+        } catch {
+          showResult({
+            ok: false,
+            message:
+              "No se pudo conectar con la API. Revisa que el backend esté corriendo.",
+          });
+        }
+      });
 
-                showResult(result);
-              } catch {
-                showResult({
-                  ok: false,
-                  message: "No se pudo obtener la sesión actual.",
-                });
-              }
-            });
+      // 2. Consulta cruda de Negocios (GET /api/businesses)
+      getBusinessesButton?.addEventListener("click", async () => {
+        try {
+          const result = await requestJson(`${apiUrl}/api/businesses`);
+          showResult(result);
+        } catch {
+          showResult({
+            ok: false,
+            message: "No se pudo obtener la lista de negocios.",
+          });
+        }
+      });
 
-            logoutButton?.addEventListener("click", () => {
-                // Eliminamos el token y los datos básicos del usuario.
-                // Sin token, el usuario ya no puede entrar al playground ni usar endpoints protegidos.
-                localStorage.removeItem("kim_scheduler_token");
-                localStorage.removeItem("kim_scheduler_user");
+      // 3. Consulta de Negocios y Renderizado Visual Dinámico en la interfaz
+      refreshBusinessesButton?.addEventListener("click", async () => {
+        try {
+          const result = await requestJson(`${apiUrl}/api/businesses`);
 
-                // Redirigimos al login para que pueda volver a autenticarse.
-                window.location.href = "/login";
-            });
+          showResult(result);
 
-            // Cargar negocios e iniciar selectores al abrir la página
-            async function loadBusinesses(): Promise<void> {
-                try {
-                    const result = await requestJson(`${apiUrl}/api/businesses`);
-                    if (Array.isArray(result.data)) {
-                        renderBusinesses(result.data as Business[]);
-                        bindDeactivateBusinessButtons();
-                    }
-                } catch (err) {
-                    console.error("Error al cargar negocios:", err);
-                }
-            }
+          if (Array.isArray(result.data)) {
+            renderBusinesses(result.data as Business[]);
+            bindDeactivateBusinessButtons(); // Indispensable llamar aquí para registrar clics en los nuevos botones dinámicos.
+          }
+        } catch {
+          showResult({
+            ok: false,
+            message: "No se pudo actualizar la lista de negocios.",
+          });
+        }
+      });
 
-            loadBusinesses();
-        </script>
-    </body>
+      // 4. Envío del Formulario para Crear Negocio (POST /api/businesses)
+      createBusinessForm?.addEventListener("submit", async (event) => {
+        // Evita que el navegador recargue la página al enviar el formulario.
+        event.preventDefault();
+
+        // Validamos que existan los inputs antes de leer sus valores.
+        // Esto evita errores si algún ID está mal escrito en el HTML.
+        if (!businessNameInput || !businessSlugInput) {
+          showResult({
+            ok: false,
+            message:
+              "No se encontraron los campos obligatorios del formulario.",
+          });
+          return;
+        }
+
+        // Creamos el objeto que espera el backend en CreateBusinessRequest.
+        const payload = {
+          name: businessNameInput.value.trim(),
+          slug: businessSlugInput.value.trim().toLowerCase(),
+          phone: businessPhoneInput?.value.trim() || null,
+          email: businessEmailInput?.value.trim() || null,
+        };
+
+        // Crear negocio ya está protegido con [Authorize].
+        // Si no hay token, avisamos antes de llamar al backend.
+        if (!getAuthToken()) {
+          showResult({
+            ok: false,
+            message: "Necesitas iniciar sesión antes de crear negocios.",
+          });
+
+          return;
+        }
+
+        try {
+          // Enviamos el negocio al backend usando POST.
+          const result = await requestJson(`${apiUrl}/api/businesses`, {
+            method: "POST",
+
+            // Mandamos el JWT en Authorization para pasar [Authorize].
+            headers: getAuthHeaders(),
+
+            body: JSON.stringify(payload),
+          });
+
+          showResult(result);
+
+          // Si el backend respondió bien (ok = true), limpiamos los campos del formulario.
+          if (result.ok) {
+            createBusinessForm.reset();
+          }
+
+          // Después de crear, volvemos a pedir la lista actualizada del backend para refrescar las tarjetas.
+          const businessesResult = await requestJson(
+            `${apiUrl}/api/businesses`,
+          );
+
+          if (Array.isArray(businessesResult.data)) {
+            renderBusinesses(businessesResult.data as Business[]);
+            bindDeactivateBusinessButtons(); // Reconectamos los botones de las nuevas tarjetas inyectadas dinámicamente.
+          }
+        } catch {
+          showResult({
+            ok: false,
+            message:
+              "No se pudo crear el negocio. Revisa que el backend esté corriendo.",
+          });
+        }
+      });
+
+      createServiceForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (
+          !serviceBusinessIdInput ||
+          !serviceNameInput ||
+          !serviceDurationInput ||
+          !servicePriceInput
+        ) {
+          showResult({
+            ok: false,
+            message:
+              "No se encontraron los campos obligatorios del formulario de servicios.",
+          });
+          return;
+        }
+
+        const businessId = serviceBusinessIdInput.value;
+        if (!businessId) {
+          showResult({
+            ok: false,
+            message: "Por favor selecciona un negocio.",
+          });
+          return;
+        }
+
+        const payload = {
+          businessId: businessId,
+          name: serviceNameInput.value.trim(),
+          description: serviceDescriptionInput?.value.trim() || null,
+          durationMinutes: parseInt(serviceDurationInput.value, 10),
+          price: parseFloat(servicePriceInput.value),
+        };
+
+        if (!getAuthToken()) {
+          showResult({
+            ok: false,
+            message: "Necesitas iniciar sesión antes de crear servicios.",
+          });
+          return;
+        }
+
+        try {
+          const result = await requestJson(`${apiUrl}/api/services`, {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload),
+          });
+
+          showResult(result);
+
+          if (result.ok) {
+            createServiceForm.reset();
+          }
+        } catch {
+          showResult({
+            ok: false,
+            message:
+              "No se pudo crear el servicio. Revisa que el backend esté corriendo.",
+          });
+        }
+      });
+
+      createBusinessHourForm?.addEventListener("submit", async (event) => {
+        // Evita que el navegador recargue la página al enviar el formulario.
+        event.preventDefault();
+
+        if (
+          !businessHourBusinessIdInput ||
+          !businessHourDayInput ||
+          !businessHourOpenTimeInput ||
+          !businessHourCloseTimeInput ||
+          !businessHourIsClosedInput
+        ) {
+          showResult({
+            ok: false,
+            message:
+              "No se encontraron todos los campos del formulario de horarios.",
+          });
+
+          return;
+        }
+
+        // Crear horarios es una acción protegida.
+        // Necesitamos token porque el endpoint usa [Authorize(Roles = "Admin")].
+        if (!getAuthToken()) {
+          showResult({
+            ok: false,
+            message: "Necesitas iniciar sesión como Admin para crear horarios.",
+          });
+
+          return;
+        }
+
+        const isClosed = businessHourIsClosedInput.checked;
+
+        // Este payload coincide con CreateBusinessHourRequest del backend.
+        // DayOfWeek viaja como número:
+        // Sunday = 0, Monday = 1, Tuesday = 2, etc.
+        const payload = {
+          businessId: businessHourBusinessIdInput.value.trim(),
+          dayOfWeek: Number(businessHourDayInput.value),
+          openTime: `${businessHourOpenTimeInput.value}:00`,
+          closeTime: `${businessHourCloseTimeInput.value}:00`,
+          isClosed,
+        };
+
+        try {
+          const result = await requestJson(`${apiUrl}/api/business-hours`, {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify(payload),
+          });
+
+          showResult(result);
+
+          if (result.ok) {
+            createBusinessHourForm.reset();
+            businessHourOpenTimeInput.value = "09:00";
+            businessHourCloseTimeInput.value = "18:00";
+          }
+        } catch {
+          showResult({
+            ok: false,
+            message:
+              "No se pudo crear el horario. Revisa backend, token o datos enviados.",
+          });
+        }
+      });
+
+      getBusinessHoursButton?.addEventListener("click", async () => {
+        if (!getBusinessHoursBusinessIdInput) {
+          showResult({
+            ok: false,
+            message: "No se encontró el campo Business ID.",
+          });
+
+          return;
+        }
+
+        const businessId = getBusinessHoursBusinessIdInput.value.trim();
+
+        if (!businessId) {
+          showResult({
+            ok: false,
+            message: "Ingresa un Business ID para consultar horarios.",
+          });
+
+          return;
+        }
+
+        try {
+          // Este GET es público por ahora.
+          // Más adelante la página pública de reservas también lo usará.
+          const result = await requestJson(
+            `${apiUrl}/api/business-hours/business/${businessId}`,
+          );
+
+          showResult(result);
+        } catch {
+          showResult({
+            ok: false,
+            message: "No se pudieron obtener los horarios del negocio.",
+          });
+        }
+      });
+
+      clearResultButton?.addEventListener("click", () => {
+        if (!resultBox) return;
+
+        resultBox.textContent = "Sin respuesta todavía.";
+      });
+
+      getCurrentUserButton?.addEventListener("click", async () => {
+        try {
+          // Este endpoint está protegido con [Authorize].
+          // Por eso mandamos Authorization: Bearer {token}.
+          const result = await requestJson(`${apiUrl}/api/auth/me`, {
+            method: "GET",
+            headers: getAuthHeaders(),
+          });
+
+          showResult(result);
+        } catch {
+          showResult({
+            ok: false,
+            message: "No se pudo obtener la sesión actual.",
+          });
+        }
+      });
+
+      logoutButton?.addEventListener("click", () => {
+        // Limpiamos la sesión local y regresamos al login.
+        clearAuthSession();
+        window.location.href = "/login";
+      });
+
+      // Cargar negocios e iniciar selectores al abrir la página
+      async function loadBusinesses(): Promise<void> {
+        try {
+          const result = await requestJson(`${apiUrl}/api/businesses`);
+          if (Array.isArray(result.data)) {
+            renderBusinesses(result.data as Business[]);
+            bindDeactivateBusinessButtons();
+          }
+        } catch (err) {
+          console.error("Error al cargar negocios:", err);
+        }
+      }
+
+      loadBusinesses();
+    </script>
+  </body>
 </html>

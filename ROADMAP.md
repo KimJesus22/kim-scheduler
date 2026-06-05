@@ -85,15 +85,34 @@ Incluye planeado:
 
 Estado: planeado.
 
+Objetivo:
+
+Crear el primer panel administrativo real para gestionar el SaaS sin depender del playground técnico.
+
 Incluye planeado:
 
-* Panel administrativo real.
-* Vista de negocios.
-* Vista de servicios.
-* Vista de horarios.
-* Vista de citas.
-* Acciones protegidas según rol.
-* Mejor separación entre Staff y Admin.
+- Dashboard administrativo protegido.
+- Layout base para `/admin`.
+- Resumen general del negocio.
+- Estadísticas básicas:
+  - total de citas
+  - citas pendientes
+  - citas confirmadas
+  - citas canceladas
+  - servicios activos
+  - negocios activos
+- Gestión visual de citas.
+- Gestión básica de clientes.
+- Navegación administrativa.
+- Separación progresiva entre playground técnico y panel real.
+
+Pendiente para versiones futuras:
+
+- Gráficas avanzadas.
+- Reportes de ingresos.
+- Clientes frecuentes.
+- Permisos finos por negocio.
+- Panel multi-negocio avanzado.
 
 ## v0.5.0 - Public Booking
 
