@@ -3,7 +3,7 @@
 // Este bloque --- se ejecuta estrictamente en el servidor en cada render.
 // Aquí definimos HTML estático y enviamos variables iniciales.
 import "../styles/global.css";
-import { apiUrl } from "../lib/api";
+import { API_URL } from "../lib/api";
 ---
 
 <html lang="es">
@@ -43,7 +43,7 @@ import { apiUrl } from "../lib/api";
           <div
             class="rounded-full bg-[var(--ks-primary-soft)] px-4 py-2 text-sm font-bold text-[var(--ks-primary)]"
           >
-            API local: {apiUrl}
+            API local: {API_URL}
           </div>
 
           <!-- Cierra sesión eliminando el JWT guardado en el navegador. -->
@@ -492,11 +492,11 @@ import { apiUrl } from "../lib/api";
         getAuthToken,
         isAuthenticated,
       } from "../lib/auth";
-      import { apiUrl, requestJson } from "../lib/api";
+      import { API_URL, requestJson } from "../lib/api";
       import type { ApiResult } from "../lib/api";
 
       // /playground es una herramienta interna.
-      // Si no hay sesión local, mandamos al usuario a login.
+      // Si no hay token local, mandamos al usuario a login.
       if (!isAuthenticated()) {
         window.location.href = "/login";
       }
@@ -722,7 +722,7 @@ import { apiUrl } from "../lib/api";
               // LLAMADA HTTP PATCH (Soft Delete):
               // Se ejecuta asíncronamente conectándose al endpoint del backend para inactivar el negocio.
               const result = await requestJson(
-                `${apiUrl}/api/businesses/${businessId}/deactivate`,
+                `${API_URL}/api/businesses/${businessId}/deactivate`,
                 {
                   method: "PATCH",
                 },
@@ -733,7 +733,7 @@ import { apiUrl } from "../lib/api";
               // Refresco de Datos Reactivo: Tras desactivar un comercio, llamamos de nuevo al backend
               // para actualizar el listado visual sin recargar la página web.
               const businessesResult = await requestJson(
-                `${apiUrl}/api/businesses`,
+                `${API_URL}/api/businesses`,
               );
 
               if (Array.isArray(businessesResult.data)) {
@@ -759,7 +759,7 @@ import { apiUrl } from "../lib/api";
       // 1. Health check de base de datos (petición GET de diagnóstico)
       checkDatabaseButton?.addEventListener("click", async () => {
         try {
-          const result = await requestJson(`${apiUrl}/api/health/database`);
+          const result = await requestJson(`${API_URL}/api/health/database`);
           showResult(result);
         } catch {
           showResult({
@@ -773,7 +773,7 @@ import { apiUrl } from "../lib/api";
       // 2. Consulta cruda de Negocios (GET /api/businesses)
       getBusinessesButton?.addEventListener("click", async () => {
         try {
-          const result = await requestJson(`${apiUrl}/api/businesses`);
+          const result = await requestJson(`${API_URL}/api/businesses`);
           showResult(result);
         } catch {
           showResult({
@@ -786,7 +786,7 @@ import { apiUrl } from "../lib/api";
       // 3. Consulta de Negocios y Renderizado Visual Dinámico en la interfaz
       refreshBusinessesButton?.addEventListener("click", async () => {
         try {
-          const result = await requestJson(`${apiUrl}/api/businesses`);
+          const result = await requestJson(`${API_URL}/api/businesses`);
 
           showResult(result);
 
@@ -839,7 +839,7 @@ import { apiUrl } from "../lib/api";
 
         try {
           // Enviamos el negocio al backend usando POST.
-          const result = await requestJson(`${apiUrl}/api/businesses`, {
+          const result = await requestJson(`${API_URL}/api/businesses`, {
             method: "POST",
 
             // Mandamos el JWT en Authorization para pasar [Authorize].
@@ -857,7 +857,7 @@ import { apiUrl } from "../lib/api";
 
           // Después de crear, volvemos a pedir la lista actualizada del backend para refrescar las tarjetas.
           const businessesResult = await requestJson(
-            `${apiUrl}/api/businesses`,
+            `${API_URL}/api/businesses`,
           );
 
           if (Array.isArray(businessesResult.data)) {
@@ -916,7 +916,7 @@ import { apiUrl } from "../lib/api";
         }
 
         try {
-          const result = await requestJson(`${apiUrl}/api/services`, {
+          const result = await requestJson(`${API_URL}/api/services`, {
             method: "POST",
             headers: getAuthHeaders(),
             body: JSON.stringify(payload),
@@ -981,7 +981,7 @@ import { apiUrl } from "../lib/api";
         };
 
         try {
-          const result = await requestJson(`${apiUrl}/api/business-hours`, {
+          const result = await requestJson(`${API_URL}/api/business-hours`, {
             method: "POST",
             headers: getAuthHeaders(),
             body: JSON.stringify(payload),
@@ -1028,7 +1028,7 @@ import { apiUrl } from "../lib/api";
           // Este GET es público por ahora.
           // Más adelante la página pública de reservas también lo usará.
           const result = await requestJson(
-            `${apiUrl}/api/business-hours/business/${businessId}`,
+            `${API_URL}/api/business-hours/business/${businessId}`,
           );
 
           showResult(result);
@@ -1050,7 +1050,7 @@ import { apiUrl } from "../lib/api";
         try {
           // Este endpoint está protegido con [Authorize].
           // Por eso mandamos Authorization: Bearer {token}.
-          const result = await requestJson(`${apiUrl}/api/auth/me`, {
+          const result = await requestJson(`${API_URL}/api/auth/me`, {
             method: "GET",
             headers: getAuthHeaders(),
           });
@@ -1063,17 +1063,17 @@ import { apiUrl } from "../lib/api";
           });
         }
       });
-
       logoutButton?.addEventListener("click", () => {
-        // Limpiamos la sesión local y regresamos al login.
+        // Limpiamos token y usuario guardados en localStorage.
         clearAuthSession();
+
         window.location.href = "/login";
       });
 
       // Cargar negocios e iniciar selectores al abrir la página
       async function loadBusinesses(): Promise<void> {
         try {
-          const result = await requestJson(`${apiUrl}/api/businesses`);
+          const result = await requestJson(`${API_URL}/api/businesses`);
           if (Array.isArray(result.data)) {
             renderBusinesses(result.data as Business[]);
             bindDeactivateBusinessButtons();

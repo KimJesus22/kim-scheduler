@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { apiUrl } from "../lib/api";
+import { API_URL } from "../lib/api";
 ---
 
 <html lang="es">
@@ -184,7 +184,7 @@ import { apiUrl } from "../lib/api";
         </main>
 
         <script>
-            import { apiUrl } from "../lib/api";
+            import { API_URL } from "../lib/api";
 
             // Referencias tipadas a elementos del formulario.
             // Esto ayuda a TypeScript a saber que estos elementos tienen propiedades como .value.
@@ -306,7 +306,7 @@ import { apiUrl } from "../lib/api";
 
                 try {
                     const response = await fetch(
-                        `${apiUrl}/api/auth/register`,
+                        `${API_URL}/api/auth/register`,
                         {
                             method: "POST",
                             headers: {
